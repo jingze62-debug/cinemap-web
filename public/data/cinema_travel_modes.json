@@ -1,0 +1,10 @@
+{
+  "generatedAt": null,
+  "provider": "openrouteservice",
+  "profiles": ["foot-walking", "cycling-regular", "driving-car"],
+  "cinemaCount": 0,
+  "pairCount": 0,
+  "missingPairs": 0,
+  "note": "Run npm run build:travel (needs ORS_API_KEY and network access to api.openrouteservice.org). Until then the app falls back to local estimates; metro still uses cinema_transit_matrix.json.",
+  "modes": {}
+}

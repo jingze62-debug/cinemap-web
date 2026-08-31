@@ -1,0 +1,1842 @@
+[
+  {
+    "id": "cinema_sfc",
+    "nameZh": "上海影城",
+    "nameEn": "Shanghai Film Art Center",
+    "district": "徐汇",
+    "address": "长宁区新华路160号",
+    "lat": 31.2056,
+    "lng": 121.4372,
+    "screeningCount": 160,
+    "todayCount": 0,
+    "heat": 100,
+    "blurb": "上影节的主场，坐满了才叫电影节。",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "徐汇展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_grand",
+    "nameZh": "上海大光明",
+    "nameEn": "Grand Theatre Shanghai",
+    "district": "黄浦",
+    "address": "黄浦区南京西路216号",
+    "lat": 31.2345,
+    "lng": 121.4728,
+    "screeningCount": 110,
+    "todayCount": 0,
+    "heat": 69,
+    "blurb": "南京路上的老牌宫殿，仪式感满分。",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ],
+    "image": "/posters/cinemas/cinema_grand.jpg"
+  },
+  {
+    "id": "cinema_baying",
+    "nameZh": "佰映三克映画",
+    "district": "杨浦",
+    "address": "静安区江宁路699号MOHO Mall地下1层 60B",
+    "lat": 31.3055,
+    "lng": 121.5142,
+    "screeningCount": 86,
+    "todayCount": 0,
+    "heat": 54,
+    "blurb": "佰映三克映画 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "杨浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_tianshan",
+    "nameZh": "天山电影院·虹桥艺术中心",
+    "nameEn": "Tianshan Cinema Hongqiao",
+    "district": "长宁",
+    "address": "长宁区天山路888号",
+    "lat": 31.2105,
+    "lng": 121.4032,
+    "screeningCount": 82,
+    "todayCount": 0,
+    "heat": 51,
+    "blurb": "西区稳定场次补给站。",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "长宁展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_peace",
+    "nameZh": "和平影都",
+    "nameEn": "Peace Cinema",
+    "district": "黄浦",
+    "address": "黄浦区西藏中路290号",
+    "lat": 31.2331,
+    "lng": 121.4755,
+    "screeningCount": 67,
+    "todayCount": 0,
+    "heat": 42,
+    "blurb": "人民广场旁的巨幕据点。",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_palace_raffles",
+    "nameZh": "百丽宫影城·长宁来福士",
+    "district": "长宁",
+    "address": "长宁区长宁路1123号七层701-703",
+    "lat": 31.2208,
+    "lng": 121.4195,
+    "screeningCount": 62,
+    "todayCount": 0,
+    "heat": 39,
+    "blurb": "百丽宫影城·长宁来福士 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "长宁展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_cmg",
+    "nameZh": "CMG融媒影城",
+    "district": "静安",
+    "address": "徐汇区龙文路19号1-4层",
+    "lat": 31.2305,
+    "lng": 121.4552,
+    "screeningCount": 55,
+    "todayCount": 0,
+    "heat": 34,
+    "blurb": "CMG融媒影城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "静安展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_majestic",
+    "nameZh": "美琪大戏院",
+    "nameEn": "Majestic Theatre",
+    "district": "静安",
+    "address": "静安区江宁路66号",
+    "lat": 31.2349,
+    "lng": 121.4501,
+    "screeningCount": 43,
+    "todayCount": 0,
+    "heat": 27,
+    "blurb": "老派剧场气场，适合仪式向场次。",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "静安展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_palace_mixc",
+    "nameZh": "百丽宫影城·万象城",
+    "district": "闵行",
+    "address": "闵行区吴中路1599号L501商铺",
+    "lat": 31.1582,
+    "lng": 121.3615,
+    "screeningCount": 42,
+    "todayCount": 0,
+    "heat": 26,
+    "blurb": "百丽宫影城·万象城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "闵行展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_caoyang",
+    "nameZh": "曹杨影城",
+    "district": "普陀",
+    "address": "普陀区兰溪路125号2楼",
+    "lat": 31.2468,
+    "lng": 121.4085,
+    "screeningCount": 41,
+    "todayCount": 0,
+    "heat": 26,
+    "blurb": "曹杨影城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "普陀展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_tianshan_wanping",
+    "nameZh": "天山电影院·宛平剧院",
+    "district": "徐汇",
+    "address": "徐汇区中山南二路859号",
+    "lat": 31.1908,
+    "lng": 121.4452,
+    "screeningCount": 40,
+    "todayCount": 0,
+    "heat": 25,
+    "blurb": "天山电影院·宛平剧院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "徐汇展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_lanxin",
+    "nameZh": "兰心大戏院",
+    "district": "黄浦",
+    "address": "黄浦区茂名南路57号",
+    "lat": 31.2205,
+    "lng": 121.4612,
+    "screeningCount": 40,
+    "todayCount": 0,
+    "heat": 25,
+    "blurb": "兰心大戏院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_shanghai_centre",
+    "nameZh": "久事·上海商城剧院",
+    "district": "静安",
+    "address": "南京西路1376号4楼",
+    "lat": 31.2278,
+    "lng": 121.4485,
+    "screeningCount": 40,
+    "todayCount": 0,
+    "heat": 25,
+    "blurb": "久事·上海商城剧院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "静安展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_yihai",
+    "nameZh": "上海艺海剧院",
+    "district": "徐汇",
+    "address": "静安区江宁路466号",
+    "lat": 31.1675,
+    "lng": 121.4238,
+    "screeningCount": 39,
+    "todayCount": 0,
+    "heat": 24,
+    "blurb": "上海艺海剧院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "徐汇展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_duoyun",
+    "nameZh": "朵云轩杜比全景声影城",
+    "district": "黄浦",
+    "address": "徐汇区天钥桥路1188号5楼",
+    "lat": 31.2392,
+    "lng": 121.4905,
+    "screeningCount": 38,
+    "todayCount": 0,
+    "heat": 24,
+    "blurb": "朵云轩杜比全景声影城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_sfc_grandgateway",
+    "nameZh": "SFC上影影城·港汇永华",
+    "district": "徐汇",
+    "address": "徐汇区虹桥路1号6层616/6M01",
+    "lat": 31.1942,
+    "lng": 121.4368,
+    "screeningCount": 37,
+    "todayCount": 0,
+    "heat": 23,
+    "blurb": "SFC上影影城·港汇永华 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "徐汇展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_palace_iapm",
+    "nameZh": "百丽宫影城·环贸iapm",
+    "district": "徐汇",
+    "address": "徐汇区淮海中路999号L6-601",
+    "lat": 31.2155,
+    "lng": 121.4512,
+    "screeningCount": 36,
+    "todayCount": 0,
+    "heat": 23,
+    "blurb": "百丽宫影城·环贸iapm · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "徐汇展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_hubei",
+    "nameZh": "沪北电影院",
+    "district": "静安",
+    "address": "静安区洛川东路500号",
+    "lat": 31.2685,
+    "lng": 121.4558,
+    "screeningCount": 35,
+    "todayCount": 0,
+    "heat": 22,
+    "blurb": "沪北电影院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "静安展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_cathay",
+    "nameZh": "国泰电影院",
+    "district": "黄浦",
+    "address": "黄浦区淮海中路870号",
+    "lat": 31.2168,
+    "lng": 121.4598,
+    "screeningCount": 34,
+    "todayCount": 0,
+    "heat": 21,
+    "blurb": "国泰电影院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ],
+    "image": "/posters/cinemas/cinema_cathay.jpg"
+  },
+  {
+    "id": "cinema_donggong",
+    "nameZh": "东宫影剧院",
+    "district": "浦东",
+    "address": "杨浦区平凉路1500号1号楼",
+    "lat": 31.2255,
+    "lng": 121.5285,
+    "screeningCount": 32,
+    "todayCount": 0,
+    "heat": 20,
+    "blurb": "东宫影剧院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_broadway_kerry",
+    "nameZh": "百美汇影城·静安嘉里",
+    "district": "静安",
+    "address": "静安区南京西路1551号嘉里中心N4-01",
+    "lat": 31.2262,
+    "lng": 121.4472,
+    "screeningCount": 32,
+    "todayCount": 0,
+    "heat": 20,
+    "blurb": "百美汇影城·静安嘉里 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "静安展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_ume_xintiandi",
+    "nameZh": "UME影城·新天地",
+    "district": "黄浦",
+    "address": "黄浦区兴业路123弄6号楼新天地时尚I座5楼",
+    "lat": 31.2202,
+    "lng": 121.4745,
+    "screeningCount": 32,
+    "todayCount": 0,
+    "heat": 20,
+    "blurb": "UME影城·新天地 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_sfc_metro",
+    "nameZh": "SFC动漫主题影院·美罗城",
+    "district": "徐汇",
+    "address": "徐汇区肇嘉浜路1111号美罗城5楼",
+    "lat": 31.1955,
+    "lng": 121.4392,
+    "screeningCount": 32,
+    "todayCount": 0,
+    "heat": 20,
+    "blurb": "SFC动漫主题影院·美罗城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "徐汇展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_palace_lujiazui",
+    "nameZh": "百丽宫影城·陆家嘴中心",
+    "district": "浦东",
+    "address": "浦东新区浦东南路889号陆家嘴中心商场10层L1001单元",
+    "lat": 31.2368,
+    "lng": 121.5055,
+    "screeningCount": 31,
+    "todayCount": 0,
+    "heat": 19,
+    "blurb": "百丽宫影城·陆家嘴中心 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_sfc_century",
+    "nameZh": "SFC永华电影荟·世纪汇",
+    "district": "浦东",
+    "address": "世纪大道1192号世纪汇广场5层022、6层001号商铺",
+    "lat": 31.2308,
+    "lng": 121.5432,
+    "screeningCount": 30,
+    "todayCount": 0,
+    "heat": 19,
+    "blurb": "SFC永华电影荟·世纪汇 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_huangpu_theatre",
+    "nameZh": "黄浦剧场",
+    "district": "黄浦",
+    "address": "黄浦区北京东路780号",
+    "lat": 31.2385,
+    "lng": 121.4845,
+    "screeningCount": 30,
+    "todayCount": 0,
+    "heat": 19,
+    "blurb": "黄浦剧场 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_cgv影城",
+    "nameZh": "CGV影城",
+    "district": "上海",
+    "address": "虹口区东长治路588号上海白玉兰广场商业裙房3层11号铺位",
+    "lat": 31.1974,
+    "lng": 121.5707,
+    "screeningCount": 27,
+    "todayCount": 0,
+    "heat": 17,
+    "blurb": "CGV影城（白玉兰广场IMAX店） · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "上海展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_cgv_baiyulan",
+    "nameZh": "CGV影城·白玉兰广场",
+    "district": "虹口",
+    "address": "虹口区东大名路1089号",
+    "lat": 31.2525,
+    "lng": 121.4985,
+    "screeningCount": 27,
+    "todayCount": 0,
+    "heat": 17,
+    "blurb": "CGV影城·白玉兰广场 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "虹口展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_sfc_dingxiang",
+    "nameZh": "SFC上影影城·丁香路",
+    "district": "浦东",
+    "address": "浦东新区丁香路858号3楼",
+    "lat": 31.2155,
+    "lng": 121.5455,
+    "screeningCount": 26,
+    "todayCount": 0,
+    "heat": 16,
+    "blurb": "SFC上影影城·丁香路 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_shiji_youyi",
+    "nameZh": "世纪友谊影城·南方商城",
+    "district": "闵行",
+    "address": "闵行区沪闵路7250号百联南方二期9楼",
+    "lat": 31.1185,
+    "lng": 121.4085,
+    "screeningCount": 25,
+    "todayCount": 0,
+    "heat": 16,
+    "blurb": "世纪友谊影城·南方商城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "闵行展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_sfc_guohua",
+    "nameZh": "SFC上影影城·国华广场",
+    "district": "虹口",
+    "address": "杨浦区三门路99号415室",
+    "lat": 31.2725,
+    "lng": 121.4925,
+    "screeningCount": 25,
+    "todayCount": 0,
+    "heat": 16,
+    "blurb": "SFC上影影城·国华广场 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "虹口展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_starx_baoshan",
+    "nameZh": "星轶影剧院·宝山日月光",
+    "district": "宝山",
+    "address": "宝山区沪太路1933号宝山日月光中心2层K区202",
+    "lat": 31.3185,
+    "lng": 121.4485,
+    "screeningCount": 25,
+    "todayCount": 0,
+    "heat": 16,
+    "blurb": "星轶影剧院·宝山日月光 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "宝山展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_sfc_bhg",
+    "nameZh": "SFC上影百联影城·八佰伴",
+    "district": "浦东",
+    "address": "浦东新区张杨路501号10楼",
+    "lat": 31.2335,
+    "lng": 121.5225,
+    "screeningCount": 25,
+    "todayCount": 0,
+    "heat": 16,
+    "blurb": "SFC上影百联影城·八佰伴 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_jiading",
+    "nameZh": "嘉定影剧院",
+    "district": "嘉定",
+    "address": "嘉定区城中路149号",
+    "lat": 31.3855,
+    "lng": 121.2485,
+    "screeningCount": 24,
+    "todayCount": 0,
+    "heat": 15,
+    "blurb": "嘉定影剧院 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "嘉定展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_huaning",
+    "nameZh": "寰映影城·大融城",
+    "district": "浦东",
+    "address": "沪太路1111弄10号1号楼3楼寰映影城",
+    "lat": 31.1885,
+    "lng": 121.5985,
+    "screeningCount": 23,
+    "todayCount": 0,
+    "heat": 14,
+    "blurb": "寰映影城·大融城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_stc",
+    "nameZh": "上海科技影城",
+    "district": "浦东",
+    "address": "黄浦区南昌路59号3楼",
+    "lat": 31.2185,
+    "lng": 121.5485,
+    "screeningCount": 22,
+    "todayCount": 0,
+    "heat": 14,
+    "blurb": "上海科技影城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_movie_movie影城",
+    "nameZh": "MOViE MOViE影城",
+    "district": "上海",
+    "address": "浦东新区东育路500弄前滩太古里石区3楼S-L3-13",
+    "lat": 31.255399999999998,
+    "lng": 121.4967,
+    "screeningCount": 16,
+    "todayCount": 0,
+    "heat": 10,
+    "blurb": "MOViE MOViE影城（前滩太古里店） · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "上海展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_movie_qiantan",
+    "nameZh": "MOViE MOViE·前滩太古里",
+    "district": "浦东",
+    "address": "浦东新区东育路500号",
+    "lat": 31.1655,
+    "lng": 121.4785,
+    "screeningCount": 16,
+    "todayCount": 0,
+    "heat": 10,
+    "blurb": "MOViE MOViE·前滩太古里 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_jiukeshu",
+    "nameZh": "九棵树未来艺术中心",
+    "district": "浦东",
+    "address": "奉贤区树桓路199弄1号",
+    "lat": 31.2055,
+    "lng": 121.5685,
+    "screeningCount": 11,
+    "todayCount": 0,
+    "heat": 7,
+    "blurb": "九棵树未来艺术中心 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_博悦汇影城",
+    "nameZh": "博悦汇影城",
+    "district": "上海",
+    "address": "黄浦区中山东二路600号BFC金融中心北区B1层02单元",
+    "lat": 31.304399999999998,
+    "lng": 121.4157,
+    "screeningCount": 6,
+    "todayCount": 0,
+    "heat": 4,
+    "blurb": "博悦汇影城(BFC外滩金融中心店) · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "上海展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_bfc",
+    "nameZh": "博悦汇影城·BFC外滩",
+    "district": "黄浦",
+    "address": "黄浦区中山东二路600号",
+    "lat": 31.2325,
+    "lng": 121.4955,
+    "screeningCount": 6,
+    "todayCount": 0,
+    "heat": 4,
+    "blurb": "博悦汇影城·BFC外滩 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "黄浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_wanda_chongming",
+    "nameZh": "万达影城·崇明",
+    "district": "崇明",
+    "address": "崇明区城桥镇崇明大道8388号3F-A室",
+    "lat": 31.6285,
+    "lng": 121.3985,
+    "screeningCount": 5,
+    "todayCount": 0,
+    "heat": 3,
+    "blurb": "万达影城·崇明 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "崇明展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_wanda_wujiaochang",
+    "nameZh": "万达影城·五角场",
+    "district": "杨浦",
+    "address": "杨浦区国宾路58号五角场万达商业广场3层",
+    "lat": 31.3025,
+    "lng": 121.5155,
+    "screeningCount": 5,
+    "todayCount": 0,
+    "heat": 3,
+    "blurb": "万达影城·五角场 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "杨浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_cgv_qingpu",
+    "nameZh": "CGV影城·青浦天空万科",
+    "district": "青浦",
+    "address": "青浦区徐泾镇崧泽大道2229弄66号L3-01",
+    "lat": 31.1685,
+    "lng": 121.1285,
+    "screeningCount": 5,
+    "todayCount": 0,
+    "heat": 3,
+    "blurb": "CGV影城·青浦天空万科 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "青浦展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_cgv_songjiang",
+    "nameZh": "CGV影城·松江印象城",
+    "district": "松江",
+    "address": "松江区广富林路1788弄印象城4层",
+    "lat": 31.0485,
+    "lng": 121.2285,
+    "screeningCount": 5,
+    "todayCount": 0,
+    "heat": 3,
+    "blurb": "CGV影城·松江印象城 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "松江展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_wanda_jinshan",
+    "nameZh": "万达影城·金山",
+    "district": "金山",
+    "address": "金山区龙皓路1188号万达广场4楼",
+    "lat": 30.7385,
+    "lng": 121.3385,
+    "screeningCount": 5,
+    "todayCount": 0,
+    "heat": 3,
+    "blurb": "万达影城·金山 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "金山展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  },
+  {
+    "id": "cinema_lingang",
+    "nameZh": "临港演艺中心",
+    "district": "浦东",
+    "address": "浦东新区临港新片区顶科路200号",
+    "lat": 30.8985,
+    "lng": 121.9285,
+    "screeningCount": 5,
+    "todayCount": 0,
+    "heat": 3,
+    "blurb": "临港演艺中心 · 上影节展映点",
+    "tips": [
+      {
+        "kind": "temp",
+        "label": "适中",
+        "text": "厅温因场次而异，建议备薄外套。"
+      },
+      {
+        "kind": "exit",
+        "label": "5~8m",
+        "text": "散场预留换乘时间。"
+      },
+      {
+        "kind": "seat",
+        "label": "推荐：中区",
+        "text": "中区视听较均衡。"
+      },
+      {
+        "kind": "note",
+        "text": "浦东展映点 · 请以当日现场指引为准。"
+      }
+    ],
+    "supplies": [
+      {
+        "kind": "metro",
+        "text": "请以现场交通指引为准"
+      }
+    ]
+  }
+]
