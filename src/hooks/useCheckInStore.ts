@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CheckIn } from "@/types/checkIn";
+import { track } from "@/lib/analytics";
 
 type CheckInState = {
   checkIns: Record<string, CheckIn>;
@@ -20,6 +21,7 @@ export const useCheckInStore = create<CheckInState>()(
       isCheckedIn: (cinemaId) => Boolean(get().checkIns[cinemaId]),
 
       checkIn: (cinemaId, note) => {
+        if (get().isCheckedIn(cinemaId)) return;
         set((s) => ({
           checkIns: {
             ...s.checkIns,
@@ -30,14 +32,17 @@ export const useCheckInStore = create<CheckInState>()(
             },
           },
         }));
+        track("venue_check_in", { cinemaId });
       },
 
       checkOut: (cinemaId) => {
+        if (!get().isCheckedIn(cinemaId)) return;
         set((s) => {
           const next = { ...s.checkIns };
           delete next[cinemaId];
           return { checkIns: next };
         });
+        track("venue_check_out", { cinemaId });
       },
 
       toggleCheckIn: (cinemaId, note) => {

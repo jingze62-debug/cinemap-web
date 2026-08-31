@@ -45,15 +45,38 @@ npx serve out
 2. **排片** — 多方案、通勤余量、导入口令、收据长图、导出 `.ics`  
 3. **影院地图** — 可缩放地图、场馆抽屉、打卡、本地避坑小纸条  
 4. **/match** — 双人碰场口令差分  
+5. **/analytics** — 埋点与行为漏斗（本机 + 全站远端）
+
+## 埋点与远程统计
+
+- 客户端事件：`选影展 → 选片 → 加场次/排片 → 地图点亮`
+- 本机：`localStorage`；远端：Cloudflare Pages Function + D1（`/api/track`、`/api/stats`）
+- 全站漏斗查看需 Pages 密钥 `ANALYTICS_READ_TOKEN`（在 `/analytics`「全站远端」输入）
+
+部署（含 Functions）：
+
+```bash
+npm run build
+npx wrangler pages deploy out --project-name=cinemap-web
+```
 
 ## 环境变量
 
-当前版本**不需要**环境变量。避坑小纸条为本地 mock（`localStorage`）；若日后接 Supabase，可增加：
+前端可选（一般同域即可，不必配置）：
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_ANALYTICS_ENDPOINT=/api/track
+NEXT_PUBLIC_ANALYTICS_STATS_ENDPOINT=/api/stats
 ```
+
+Pages 密钥（服务端）：
+
+```bash
+# 读取全站漏斗口令
+npx wrangler pages secret put ANALYTICS_READ_TOKEN --project-name=cinemap-web
+```
+
+D1 绑定见 `wrangler.toml`（`DB` → `cinemap-analytics`）。
 
 ## 地图瓦片说明
 

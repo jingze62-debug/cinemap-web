@@ -20,9 +20,50 @@ const TABS: {
 type BottomTabBarProps = {
   active: MainTab;
   onChange: (tab: MainTab) => void;
+  /** bottom = mobile fixed; top = desktop header strip */
+  variant?: "bottom" | "top";
 };
 
-export function BottomTabBar({ active, onChange }: BottomTabBarProps) {
+export function BottomTabBar({
+  active,
+  onChange,
+  variant = "bottom",
+}: BottomTabBarProps) {
+  if (variant === "top") {
+    return (
+      <nav className="flex h-11 items-stretch gap-0.5" aria-label="主导航">
+        {TABS.map(({ id, label, code, icon: Icon }) => {
+          const isActive = id === active;
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onChange(id)}
+              className={cn(
+                "flex min-w-0 flex-1 items-center justify-center gap-2 px-2 font-mono text-[12px] font-bold transition-colors",
+                isActive
+                  ? "border-b-2 border-accent text-accent"
+                  : "border-b-2 border-transparent text-ink/45 hover:text-ink/75"
+              )}
+              aria-current={isActive ? "page" : undefined}
+            >
+              <span
+                className={cn(
+                  "text-[9px] tracking-[0.12em]",
+                  isActive ? "text-signal-dim" : "text-ink/35"
+                )}
+              >
+                {code}
+              </span>
+              <Icon className="h-4 w-4 shrink-0" aria-hidden />
+              <span className="truncate tracking-wide">{label}</span>
+            </button>
+          );
+        })}
+      </nav>
+    );
+  }
+
   return (
     <nav
       className="safe-bottom fixed inset-x-0 bottom-0 z-[600] border-t border-ink/15 bg-panel-raised/82 backdrop-blur-xl"

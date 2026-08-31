@@ -284,7 +284,13 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
         </div>
 
         <footer className="mt-8 border-t-2 border-ink/10 pt-4 text-[10px] font-semibold tracking-[0.12em] text-ink/40">
-          <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <a
+              href="/analytics/"
+              className="text-ink/45 underline-offset-2 hover:text-accent hover:underline"
+            >
+              埋点 / 漏斗
+            </a>
             <span className="text-accent">信号结束</span>
           </div>
         </footer>

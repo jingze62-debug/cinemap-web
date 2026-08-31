@@ -556,274 +556,194 @@ export function SessionsView() {
   ];
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-paper text-ink">
-      <header className="shrink-0 px-5 pb-3 pt-5">
-        <div className="flex items-start gap-3">
-          <div className="cm-frost flex h-14 w-14 shrink-0 items-center justify-center border-2 border-ink font-display text-2xl font-black tracking-tight">
-            02
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-mono text-[11px] font-bold tracking-[0.12em] text-ink/50">
-              <span className="text-accent">{"//"}</span> 挑场次 · Side B ·{" "}
-              {dataset.editionLabel}
-            </p>
-            <h1 className="mt-1.5 font-display text-[1.85rem] font-black leading-[1.15] tracking-tight text-ink">
-              挑选
-              <span className="bg-accent px-1.5 text-white">场次</span>
-            </h1>
-            <p className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink/40">
-              Pick · Session
-            </p>
-            <p className="mt-2 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wide text-ink/45">
-              <span className="cm-status-dot" />
-              共 {total} 场 · 当前 {filtered.length} 场
-            </p>
-          </div>
-        </div>
-      </header>
-
-      {/* Console strip: search + scopes */}
-      <div className="shrink-0 px-5">
-        <div className="cm-frost rounded-xl border-2 border-ink/10">
-          <div className="h-1 w-full cm-hazard" aria-hidden />
-          <div className="space-y-2.5 p-3">
-            <p className="font-mono text-[10px] font-bold tracking-[0.12em] text-ink/40">
-              <span className="text-accent">{"//"}</span> 筛选 · Find
-            </p>
-            <label className="relative block">
-              <Search
-                className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink/35"
-                aria-hidden
-              />
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="搜片名、导演、影院..."
-                className="h-9 w-full rounded-md border border-ink/12 bg-paper/60 pl-8 pr-3 font-mono text-[13px] text-ink placeholder:text-ink/35 outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20"
-              />
-            </label>
-
-            <div className="flex flex-wrap gap-1.5">
-              {(
-                [
-                  { id: "all" as const, label: "全部场次" },
-                  { id: "wanted" as const, label: "已标星影片" },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setScope(tab.id)}
-                  className={cn(
-                    "rounded-md border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors",
-                    scope === tab.id
-                      ? "border-ink bg-ink text-paper"
-                      : "border-ink/12 bg-paper/50 text-ink/55 hover:border-ink/25"
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-              <button
-                type="button"
-                onClick={() => setFiltersOpen((v) => !v)}
-                aria-expanded={filtersOpen}
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors",
-                  filtersOpen
-                    ? "border-accent bg-accent/10 text-accent"
-                    : "border-ink/12 bg-paper/50 text-ink/55"
-                )}
-              >
-                筛选
-                <ChevronDown
-                  className={cn(
-                    "h-3.5 w-3.5 transition-transform",
-                    filtersOpen && "rotate-180"
-                  )}
-                />
-              </button>
-              {hasActiveFilter && (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="rounded-md border border-ink/12 px-2.5 py-1 font-mono text-[11px] font-bold text-ink/45 hover:border-accent/40 hover:text-accent"
-                >
-                  清除
-                </button>
-              )}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-paper text-ink lg:flex-row lg:gap-4 lg:px-4 lg:pb-4 lg:pt-4">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="shrink-0 px-5 pb-3 pt-5 lg:px-0 lg:pt-0">
+          <div className="flex items-start gap-3">
+            <div className="cm-frost flex h-12 w-12 shrink-0 items-center justify-center border-2 border-ink font-display text-xl font-black tracking-tight lg:h-14 lg:w-14 lg:text-2xl">
+              02
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-mono text-[11px] font-bold tracking-[0.12em] text-ink/50">
+                <span className="text-accent">{"//"}</span> 挑场次 · Side B ·{" "}
+                {dataset.editionLabel}
+              </p>
+              <h1 className="mt-1 font-display text-[1.55rem] font-black leading-[1.15] tracking-tight text-ink lg:text-[1.75rem]">
+                挑选
+                <span className="bg-accent px-1.5 text-white">场次</span>
+              </h1>
+              <p className="mt-2 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wide text-ink/45">
+                <span className="cm-status-dot" />
+                共 {total} 场 · 当前 {filtered.length} 场
+                <span className="text-signal-dim">
+                  · 已排 {scheduledRows.length}
+                </span>
+              </p>
             </div>
           </div>
-        </div>
-      </div>
+        </header>
 
-      {filtersOpen && (
-        <div className="mt-2 shrink-0 space-y-2 border-y border-ink/10 bg-chassis/35 px-5 py-2.5">
-          <ChipRow
-            label="日期"
-            options={dateOptions}
-            value={date}
-            onChange={setDate}
-          />
-          <ChipRow
-            label="影院"
-            options={cinemaOptions}
-            value={cinemaId}
-            onChange={setCinemaId}
-          />
-          <ChipRow
-            label="单元"
-            options={sectionOptions}
-            value={section}
-            onChange={setSection}
-          />
-          <FilterSelect
-            field="Director"
-            label="全部导演"
-            value={director}
-            options={directorOptions}
-            onChange={setDirector}
-            searchableAbove={0}
-          />
-        </div>
-      )}
+        <div className="shrink-0 px-5 lg:px-0">
+          <div className="cm-frost rounded-xl border-2 border-ink/10">
+            <div className="h-1 w-full cm-hazard" aria-hidden />
+            <div className="space-y-2.5 p-3">
+              <p className="font-mono text-[10px] font-bold tracking-[0.12em] text-ink/40">
+                <span className="text-accent">{"//"}</span> 筛选 · Find
+              </p>
+              <label className="relative block">
+                <Search
+                  className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink/35"
+                  aria-hidden
+                />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="搜片名、导演、影院..."
+                  className="h-9 w-full rounded-md border border-ink/12 bg-paper/60 pl-8 pr-3 font-mono text-[13px] text-ink placeholder:text-ink/35 outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20"
+                />
+              </label>
 
-      <div
-        ref={dragRef}
-        onClickCapture={suppressClickIfDragged}
-        onScroll={onListScroll}
-        className={cn(
-          "cm-scroll-auto mt-3 min-h-0 flex-1 select-none overflow-y-auto overscroll-contain [&_input]:cursor-text [&_input]:select-text",
-          dragging ? "cursor-grabbing" : "cursor-grab",
-          (listScrolling || dragging) && "is-scrolling"
-        )}
-      >
-      <div className="space-y-6 px-5 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] pt-1">
-        {scheduledRows.length > 0 && (
-          <section className="animate-fade-up">
-            <header className="mb-2.5 flex items-end justify-between gap-3 border-b-2 border-signal/25 pb-2">
-              <div className="min-w-0 pb-0.5">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
-                  <span className="text-signal">{"//"}</span> In Plan · 已排入
-                </p>
-                <p className="font-mono text-[12px] font-bold text-ink/60">
-                  当前方案场次
-                </p>
-              </div>
-              <div className="flex shrink-0 items-center gap-1.5 pb-0.5">
-                <span className="cm-frost-soft rounded-full border border-signal/30 px-2.5 py-0.5 font-mono text-[10px] font-bold text-signal-dim">
-                  {scheduledRows.length} 场
-                </span>
+              <div className="flex flex-wrap gap-1.5">
+                {(
+                  [
+                    { id: "all" as const, label: "全部场次" },
+                    { id: "wanted" as const, label: "已标星影片" },
+                  ] as const
+                ).map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setScope(tab.id)}
+                    className={cn(
+                      "rounded-md border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors",
+                      scope === tab.id
+                        ? "border-ink bg-ink text-paper"
+                        : "border-ink/12 bg-paper/50 text-ink/55 hover:border-ink/25"
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
                 <button
                   type="button"
-                  onClick={() => setScheduledCollapsed((v) => !v)}
-                  aria-expanded={!scheduledCollapsed}
-                  aria-label={
-                    scheduledCollapsed ? "展开已排入场次" : "收起已排入场次"
-                  }
-                  className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-ink/12 bg-paper/60 text-ink/50 transition-colors hover:border-signal/40 hover:text-signal-dim"
+                  onClick={() => setFiltersOpen((v) => !v)}
+                  aria-expanded={filtersOpen}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors",
+                    filtersOpen
+                      ? "border-accent bg-accent/10 text-accent"
+                      : "border-ink/12 bg-paper/50 text-ink/55"
+                  )}
                 >
+                  筛选
                   <ChevronDown
                     className={cn(
-                      "h-3.5 w-3.5 transition-transform duration-200",
-                      scheduledCollapsed && "-rotate-90"
+                      "h-3.5 w-3.5 transition-transform",
+                      filtersOpen && "rotate-180"
                     )}
                   />
                 </button>
+                {hasActiveFilter && (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="rounded-md border border-ink/12 px-2.5 py-1 font-mono text-[11px] font-bold text-ink/45 hover:border-accent/40 hover:text-accent"
+                  >
+                    清除
+                  </button>
+                )}
               </div>
-            </header>
-            {!scheduledCollapsed && (
-              <div className="space-y-2">
-                {scheduledRows.map(({ screening: s, film }) => {
-                  const cinema = cinemasById.get(s.cinemaId);
-                  return (
-                    <SessionRow
-                      key={`plan-${s.id}`}
-                      screening={s}
-                      film={film}
-                      cinemaName={cinema?.nameZh ?? s.cinemaId}
-                      added
-                      conflict={false}
-                      booked={bookedCounts.get(s.id) ?? 0}
-                      wanted={Boolean(wanted[film.id])}
-                      onToggle={() => toggle(s)}
-                      onToggleWant={() => toggleWant(film.id)}
-                    />
-                  );
-                })}
-              </div>
-            )}
-          </section>
+            </div>
+          </div>
+        </div>
+
+        {filtersOpen && (
+          <div className="mt-2 shrink-0 space-y-2 border-y border-ink/10 bg-chassis/35 px-5 py-2.5 lg:mx-0 lg:rounded-lg lg:border lg:px-3">
+            <ChipRow
+              label="日期"
+              options={dateOptions}
+              value={date}
+              onChange={setDate}
+            />
+            <ChipRow
+              label="影院"
+              options={cinemaOptions}
+              value={cinemaId}
+              onChange={setCinemaId}
+            />
+            <ChipRow
+              label="单元"
+              options={sectionOptions}
+              value={section}
+              onChange={setSection}
+            />
+            <FilterSelect
+              field="Director"
+              label="全部导演"
+              value={director}
+              options={directorOptions}
+              onChange={setDirector}
+              searchableAbove={0}
+            />
+          </div>
         )}
 
-        {byDateGroups.length === 0 ? (
-          scheduledRows.length === 0 && (
-          <div className="cm-frost-soft rounded-xl border-2 border-dashed border-ink/20 px-4 py-14 text-center">
-            <p className="font-mono text-sm font-semibold text-ink/45">
-              没有匹配的场次
-            </p>
-            <p className="mt-1 font-mono text-[11px] text-ink/30">
-              放宽筛选或点「清除」重新浏览
-            </p>
-          </div>
-          )
-        ) : (
-          byDateGroups.map(([d, rows]) => {
-            const parts = formatDateParts(d);
-            const collapsed = Boolean(collapsedDates[d]);
-            return (
-              <section key={d} className="animate-fade-up">
-                <header className="mb-2.5 flex items-end justify-between gap-3 border-b-2 border-ink/10 pb-2">
-                  <div className="flex min-w-0 items-end gap-2.5">
-                    <span className="font-display text-3xl font-black leading-none tabular-nums text-ink">
-                      {parts.day}
-                    </span>
-                    <div className="pb-0.5">
-                      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
-                        <span className="text-accent">{"//"}</span> {d}
-                      </p>
-                      <p className="font-mono text-[12px] font-bold text-ink/60">
-                        {parts.month}月 · 星期{parts.weekday}
-                      </p>
-                    </div>
+        <div
+          ref={dragRef}
+          onClickCapture={suppressClickIfDragged}
+          onScroll={onListScroll}
+          className={cn(
+            "cm-scroll-auto mt-3 min-h-0 flex-1 select-none overflow-y-auto overscroll-contain [&_input]:cursor-text [&_input]:select-text",
+            dragging ? "cursor-grabbing" : "cursor-grab",
+            (listScrolling || dragging) && "is-scrolling"
+          )}
+        >
+          <div className="space-y-6 px-5 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] pt-1 lg:px-0 lg:pb-2">
+            {/* Mobile-only: scheduled block in scroll */}
+            {scheduledRows.length > 0 && (
+              <section className="animate-fade-up lg:hidden">
+                <header className="mb-2.5 flex items-end justify-between gap-3 border-b-2 border-signal/25 pb-2">
+                  <div className="min-w-0 pb-0.5">
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
+                      <span className="text-signal">{"//"}</span> In Plan ·
+                      已排入
+                    </p>
+                    <p className="font-mono text-[12px] font-bold text-ink/60">
+                      当前方案场次
+                    </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5 pb-0.5">
-                    <span className="cm-frost-soft rounded-full border border-ink/12 px-2.5 py-0.5 font-mono text-[10px] font-bold text-ink/50">
-                      {rows.length} 场
+                    <span className="cm-frost-soft rounded-full border border-signal/30 px-2.5 py-0.5 font-mono text-[10px] font-bold text-signal-dim">
+                      {scheduledRows.length} 场
                     </span>
                     <button
                       type="button"
-                      onClick={() => toggleDateCollapsed(d)}
-                      aria-expanded={!collapsed}
-                      aria-label={collapsed ? `展开 ${d}` : `收起 ${d}`}
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-ink/12 bg-paper/60 text-ink/50 transition-colors hover:border-accent/40 hover:text-accent"
+                      onClick={() => setScheduledCollapsed((v) => !v)}
+                      aria-expanded={!scheduledCollapsed}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-ink/12 bg-paper/60 text-ink/50"
                     >
                       <ChevronDown
                         className={cn(
                           "h-3.5 w-3.5 transition-transform duration-200",
-                          collapsed && "-rotate-90"
+                          scheduledCollapsed && "-rotate-90"
                         )}
                       />
                     </button>
                   </div>
                 </header>
-
-                {!collapsed && (
+                {!scheduledCollapsed && (
                   <div className="space-y-2">
-                    {rows.map(({ screening: s, film }) => {
+                    {scheduledRows.map(({ screening: s, film }) => {
                       const cinema = cinemasById.get(s.cinemaId);
-                      const added = addedSet.has(s.id);
-                      const conflict =
-                        !added && wouldConflict(existingScreenings, s);
                       return (
                         <SessionRow
-                          key={s.id}
+                          key={`plan-${s.id}`}
                           screening={s}
                           film={film}
                           cinemaName={cinema?.nameZh ?? s.cinemaId}
-                          added={added}
-                          conflict={conflict}
+                          added
+                          conflict={false}
                           booked={bookedCounts.get(s.id) ?? 0}
                           wanted={Boolean(wanted[film.id])}
                           onToggle={() => toggle(s)}
@@ -834,11 +754,130 @@ export function SessionsView() {
                   </div>
                 )}
               </section>
-            );
-          })
-        )}
+            )}
+
+            {byDateGroups.length === 0 ? (
+              scheduledRows.length === 0 && (
+                <div className="cm-frost-soft rounded-xl border-2 border-dashed border-ink/20 px-4 py-14 text-center">
+                  <p className="font-mono text-sm font-semibold text-ink/45">
+                    没有匹配的场次
+                  </p>
+                  <p className="mt-1 font-mono text-[11px] text-ink/30">
+                    放宽筛选或点「清除」重新浏览
+                  </p>
+                </div>
+              )
+            ) : (
+              byDateGroups.map(([d, rows]) => {
+                const parts = formatDateParts(d);
+                const collapsed = Boolean(collapsedDates[d]);
+                return (
+                  <section key={d} className="animate-fade-up">
+                    <header className="mb-2.5 flex items-end justify-between gap-3 border-b-2 border-ink/10 pb-2">
+                      <div className="flex min-w-0 items-end gap-2.5">
+                        <span className="font-display text-3xl font-black leading-none tabular-nums text-ink">
+                          {parts.day}
+                        </span>
+                        <div className="pb-0.5">
+                          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
+                            <span className="text-accent">{"//"}</span> {d}
+                          </p>
+                          <p className="font-mono text-[12px] font-bold text-ink/60">
+                            {parts.month}月 · 星期{parts.weekday}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-1.5 pb-0.5">
+                        <span className="cm-frost-soft rounded-full border border-ink/12 px-2.5 py-0.5 font-mono text-[10px] font-bold text-ink/50">
+                          {rows.length} 场
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleDateCollapsed(d)}
+                          aria-expanded={!collapsed}
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-ink/12 bg-paper/60 text-ink/50 hover:border-accent/40 hover:text-accent"
+                        >
+                          <ChevronDown
+                            className={cn(
+                              "h-3.5 w-3.5 transition-transform duration-200",
+                              collapsed && "-rotate-90"
+                            )}
+                          />
+                        </button>
+                      </div>
+                    </header>
+
+                    {!collapsed && (
+                      <div className="space-y-2">
+                        {rows.map(({ screening: s, film }) => {
+                          const cinema = cinemasById.get(s.cinemaId);
+                          const added = addedSet.has(s.id);
+                          const conflict =
+                            !added && wouldConflict(existingScreenings, s);
+                          return (
+                            <SessionRow
+                              key={s.id}
+                              screening={s}
+                              film={film}
+                              cinemaName={cinema?.nameZh ?? s.cinemaId}
+                              added={added}
+                              conflict={conflict}
+                              booked={bookedCounts.get(s.id) ?? 0}
+                              wanted={Boolean(wanted[film.id])}
+                              onToggle={() => toggle(s)}
+                              onToggleWant={() => toggleWant(film.id)}
+                            />
+                          );
+                        })}
+                      </div>
+                    )}
+                  </section>
+                );
+              })
+            )}
+          </div>
+        </div>
       </div>
-      </div>
+
+      {/* Desktop: always-visible plan pane */}
+      <aside className="hidden min-h-0 w-[min(100%,24rem)] shrink-0 flex-col overflow-hidden rounded-xl border border-ink/12 bg-panel-raised/30 lg:flex">
+        <div className="shrink-0 border-b border-ink/10 px-3 py-2.5">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
+            <span className="text-signal">{"//"}</span> In Plan · 已排入
+          </p>
+          <p className="mt-1 font-mono text-[12px] font-bold text-ink/65">
+            当前方案 · {scheduledRows.length} 场
+          </p>
+        </div>
+        <div className="cm-scroll-auto min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain p-3">
+          {scheduledRows.length === 0 ? (
+            <div className="flex h-full min-h-[12rem] flex-col items-center justify-center gap-2 px-3 text-center text-ink/35">
+              <Plus className="h-6 w-6" />
+              <p className="font-mono text-[12px] leading-relaxed">
+                在左侧点「加入」，场次会出现在这里
+              </p>
+            </div>
+          ) : (
+            scheduledRows.map(({ screening: s, film }) => {
+              const cinema = cinemasById.get(s.cinemaId);
+              return (
+                <SessionRow
+                  key={`desk-plan-${s.id}`}
+                  screening={s}
+                  film={film}
+                  cinemaName={cinema?.nameZh ?? s.cinemaId}
+                  added
+                  conflict={false}
+                  booked={bookedCounts.get(s.id) ?? 0}
+                  wanted={Boolean(wanted[film.id])}
+                  onToggle={() => toggle(s)}
+                  onToggleWant={() => toggleWant(film.id)}
+                />
+              );
+            })
+          )}
+        </div>
+      </aside>
     </div>
   );
 }

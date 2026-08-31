@@ -79,6 +79,10 @@ type FilmCardProps = {
   conflictHintId?: string | null;
   wanted: boolean;
   onToggleWant: () => void;
+  /** Desktop list: highlight as selected (detail shown elsewhere) */
+  selected?: boolean;
+  /** Hide inline expand body from lg up (detail lives in side pane) */
+  hideExpandOnLg?: boolean;
 };
 
 export function FilmCard({
@@ -92,6 +96,8 @@ export function FilmCard({
   conflictHintId,
   wanted,
   onToggleWant,
+  selected = false,
+  hideExpandOnLg = false,
 }: FilmCardProps) {
   const [from, to] = film.posterGradient ?? ["#c4b8a4", "#e85d33"];
   const meta = [
@@ -105,7 +111,7 @@ export function FilmCard({
     <article
       className={cn(
         "cm-frost-card overflow-hidden rounded-lg border-2 transition-colors",
-        isExpanded
+        isExpanded || selected
           ? "border-accent/50 shadow-[inset_3px_0_0_0_var(--accent)]"
           : wanted
             ? "border-accent/25"
@@ -184,8 +190,12 @@ export function FilmCard({
       </button>
 
       {isExpanded && (
-        <div className="space-y-2 border-t border-ink/8 bg-panel/80 px-3 pb-3 pt-2">
-          {splitDirectorNames(film.director).length > 1 && (
+        <div
+          className={cn(
+            "space-y-2 border-t border-ink/8 bg-panel/80 px-3 pb-3 pt-2",
+            hideExpandOnLg && "lg:hidden"
+          )}
+        >          {splitDirectorNames(film.director).length > 1 && (
             <p className="font-mono text-[10px] leading-relaxed text-ink/50">
               <span className="font-bold uppercase tracking-[0.12em] text-ink/40">
                 <span className="text-accent">{"//"}</span> Directors

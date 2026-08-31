@@ -44,6 +44,8 @@ type ScheduleCalendarViewProps = {
   matrix: TransitMatrix;
   travelModes?: TravelModesMatrix;
   onRemove: (screeningId: string) => void;
+  /** Highlight a screening card (desktop list → calendar sync) */
+  highlightId?: string | null;
 };
 
 function screeningEndMin(s: Screening): number {
@@ -111,6 +113,7 @@ export function ScheduleCalendarView({
   matrix,
   travelModes,
   onRemove,
+  highlightId = null,
 }: ScheduleCalendarViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const sorted = useMemo(() => sortScreenings(screenings), [screenings]);
@@ -358,7 +361,8 @@ export function ScheduleCalendarView({
           ref={scrollRef}
           onClickCapture={suppressClickIfDragged}
           className={cn(
-            "relative h-[min(58dvh,calc(100dvh-17.5rem))] touch-none overflow-auto overscroll-contain scrollbar-none select-none",
+            "relative touch-none overflow-auto overscroll-contain scrollbar-none select-none",
+            "h-[min(58dvh,calc(100dvh-17.5rem))] lg:h-full lg:min-h-[20rem]",
             dragging ? "cursor-grabbing" : "cursor-grab"
           )}
         >
@@ -451,11 +455,13 @@ export function ScheduleCalendarView({
                       const isOverlapCard = overlapIds.has(s.id);
                       const isRaised =
                         isOverlapCard && focusedOverlapId === s.id;
+                      const isHighlighted = highlightId === s.id;
 
                       return (
                         <article
                           key={s.id}
                           data-overlap-card={isOverlapCard ? "" : undefined}
+                          data-highlight-card={isHighlighted ? "" : undefined}
                           role={isOverlapCard ? "button" : undefined}
                           tabIndex={isOverlapCard ? 0 : undefined}
                           onClick={() => {
@@ -471,11 +477,13 @@ export function ScheduleCalendarView({
                             }
                           }}
                           className={cn(
-                            "absolute left-1.5 right-1.5 overflow-hidden rounded-lg border border-ink/10 shadow-[0_2px_10px_color-mix(in_srgb,var(--ink)_8%,transparent)] backdrop-blur-[1px] transition-[box-shadow]",
+                            "absolute left-1.5 right-1.5 overflow-hidden rounded-lg border border-ink/10 shadow-[0_2px_10px_color-mix(in_srgb,var(--ink)_8%,transparent)] backdrop-blur-[1px] transition-[box-shadow,ring]",
                             isOverlapCard && "cursor-pointer",
-                            isRaised ? "z-[3]" : "z-[1]",
+                            isRaised || isHighlighted ? "z-[3]" : "z-[1]",
                             isRaised &&
-                              "shadow-[0_4px_16px_color-mix(in_srgb,var(--ink)_14%,transparent)]"
+                              "shadow-[0_4px_16px_color-mix(in_srgb,var(--ink)_14%,transparent)]",
+                            isHighlighted &&
+                              "ring-2 ring-accent ring-offset-1 ring-offset-paper"
                           )}
                           style={{
                             top,

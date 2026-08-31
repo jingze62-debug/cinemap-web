@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { track } from "@/lib/analytics";
 
 type WantState = {
   wanted: Record<string, true>;
@@ -18,12 +19,18 @@ export const useWantStore = create<WantState>()(
       isWanted: (filmId) => Boolean(get().wanted[filmId]),
 
       setWanted: (filmId, wanted) => {
+        const wasWanted = Boolean(get().wanted[filmId]);
         set((s) => {
           const next = { ...s.wanted };
           if (wanted) next[filmId] = true;
           else delete next[filmId];
           return { wanted: next };
         });
+        if (wanted && !wasWanted) {
+          track("film_want", { filmId });
+        } else if (!wanted && wasWanted) {
+          track("film_unwant", { filmId });
+        }
       },
 
       toggleWant: (filmId) => {

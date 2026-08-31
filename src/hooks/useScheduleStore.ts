@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Plan } from "@/types/plan";
+import { track } from "@/lib/analytics";
 
 function uid(prefix: string): string {
   return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
@@ -106,17 +107,21 @@ export const useScheduleStore = create<ScheduleState>()(
 
       addScreening: (screeningId) => {
         const { activePlanId, plans } = get();
+        const plan = plans.find((p) => p.id === activePlanId);
+        if (plan?.screeningIds.includes(screeningId)) return;
         set({
           plans: plans.map((p) => {
             if (p.id !== activePlanId) return p;
-            if (p.screeningIds.includes(screeningId)) return p;
             return { ...p, screeningIds: [...p.screeningIds, screeningId] };
           }),
         });
+        track("screening_add", { screeningId, planId: activePlanId });
       },
 
       removeScreening: (screeningId) => {
         const { activePlanId, plans } = get();
+        const plan = plans.find((p) => p.id === activePlanId);
+        if (!plan?.screeningIds.includes(screeningId)) return;
         set({
           plans: plans.map((p) =>
             p.id === activePlanId
@@ -129,6 +134,7 @@ export const useScheduleStore = create<ScheduleState>()(
               : p
           ),
         });
+        track("screening_remove", { screeningId, planId: activePlanId });
       },
 
       hasScreening: (screeningId) => {
