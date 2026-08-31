@@ -41,20 +41,24 @@ export const useWantStore = create<WantState>()(
       name: "cinemap-want-v1",
       version: 2,
       migrate: (persisted) => {
-        const raw = persisted as {
-          wanted?: Record<string, true>;
-          ratings?: Record<string, number>;
-        };
-        if (raw?.wanted && !raw.ratings) {
-          return { wanted: raw.wanted };
-        }
-        const wanted: Record<string, true> = { ...(raw?.wanted ?? {}) };
-        if (raw?.ratings) {
-          for (const [id, rating] of Object.entries(raw.ratings)) {
-            if (rating > 0) wanted[id] = true;
+        try {
+          const raw = persisted as {
+            wanted?: Record<string, true>;
+            ratings?: Record<string, number>;
+          };
+          if (raw?.wanted && !raw.ratings) {
+            return { wanted: raw.wanted };
           }
+          const wanted: Record<string, true> = { ...(raw?.wanted ?? {}) };
+          if (raw?.ratings) {
+            for (const [id, rating] of Object.entries(raw.ratings)) {
+              if (rating > 0) wanted[id] = true;
+            }
+          }
+          return { wanted };
+        } catch {
+          return { wanted: {} };
         }
-        return { wanted };
       },
       partialize: (s) => ({ wanted: s.wanted }),
     }

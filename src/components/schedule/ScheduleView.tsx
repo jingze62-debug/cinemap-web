@@ -102,145 +102,128 @@ export function ScheduleView() {
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden text-ink lg:flex-row lg:gap-4 lg:px-4 lg:pb-4 lg:pt-4">
-      {/* Mobile: one column scrolls; Desktop: unwraps into side + canvas */}
-      <div className="min-h-0 flex-1 overflow-y-auto lg:contents">
-        <aside className="shrink-0 px-5 pb-1 pt-6 lg:flex lg:h-full lg:w-[min(100%,22rem)] lg:flex-col lg:gap-3 lg:overflow-hidden lg:px-0 lg:pb-0 lg:pt-0">
-          <ScheduleHeader
-            stats={stats}
-            edition={festival.data.dataset.editionLabel}
-            compact
-          />
-          <div className="mt-3 lg:mt-0">
-            <PlanTabs
-              plans={plans}
-              activePlanId={activePlanId}
-              onSelect={setActivePlan}
-              onAdd={() => addPlan()}
-              onClone={(id) => clonePlan(id)}
-              onRemove={(id) => removePlan(id)}
+      <aside className="flex max-h-[42%] shrink-0 flex-col gap-3 overflow-hidden px-5 pb-2 pt-5 lg:max-h-none lg:h-full lg:w-[min(100%,22rem)] lg:px-0 lg:pb-0 lg:pt-0">
+        <ScheduleHeader
+          stats={stats}
+          edition={festival.data.dataset.editionLabel}
+          compact
+        />
+        <PlanTabs
+          plans={plans}
+          activePlanId={activePlanId}
+          onSelect={setActivePlan}
+          onAdd={() => addPlan()}
+          onClone={(id) => clonePlan(id)}
+          onRemove={(id) => removePlan(id)}
+        />
+        <div className="cm-frost overflow-hidden rounded-xl border-2 border-ink/10">
+          <div className="h-1 w-full cm-hazard" aria-hidden />
+          <div className="flex gap-1.5 p-2.5">
+            <Link
+              href="/match"
+              className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-ink/12 bg-paper/60 px-2 py-2 font-mono text-[11px] font-bold tracking-wide text-ink/65 hover:border-accent/40 hover:text-accent"
+            >
+              <Handshake className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">碰场</span>
+            </Link>
+            <QuickAction
+              icon={ImageIcon}
+              label="排片表"
+              onClick={() => setPosterOpen(true)}
             />
+            <QuickAction icon={CalendarPlus} label="日历" onClick={exportIcs} />
           </div>
-          <div className="mt-3 lg:mt-0">
-            <div className="cm-frost overflow-hidden rounded-xl border-2 border-ink/10">
-              <div className="h-1 w-full cm-hazard" aria-hidden />
-              <div className="flex gap-1.5 p-2.5">
-                <Link
-                  href="/match"
-                  className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-ink/12 bg-paper/60 px-2 py-2 font-mono text-[11px] font-bold tracking-wide text-ink/65 hover:border-accent/40 hover:text-accent"
-                >
-                  <Handshake className="h-3.5 w-3.5 shrink-0" />
-                  <span className="truncate">碰场</span>
-                </Link>
-                <QuickAction
-                  icon={ImageIcon}
-                  label="排片表"
-                  onClick={() => setPosterOpen(true)}
-                />
-                <QuickAction
-                  icon={CalendarPlus}
-                  label="日历"
-                  onClick={exportIcs}
-                />
-              </div>
-            </div>
-          </div>
+        </div>
 
-          {/* Desktop-only screening list */}
-          <div className="cm-frost mt-4 hidden min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-ink/12 lg:mt-0 lg:flex">
-            <div className="h-1 w-full shrink-0 cm-hazard" aria-hidden />
-            <p className="shrink-0 border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
-              <span className="text-accent">{"//"}</span> 场次清单 ·{" "}
-              {sorted.length} 场
-            </p>
-            <div className="cm-scroll-auto min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain p-2">
-              {sorted.length === 0 && (
-                <p className="flex items-center justify-center gap-1.5 px-2 py-8 font-mono text-[11px] text-ink/35">
-                  <Clapperboard className="h-3.5 w-3.5" />
-                  去「选电影 / 挑场次」加入场次
-                </p>
-              )}
-              {sorted.map((s) => {
-                const film = festival.data.filmsById.get(s.filmId);
-                const cinema = festival.data.cinemasById.get(s.cinemaId);
-                const active = focusId === s.id;
-                return (
-                  <div
-                    key={s.id}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setFocusId(s.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setFocusId(s.id);
-                      }
-                    }}
-                    className={cn(
-                      "flex items-start gap-2 rounded-md border px-2.5 py-2 text-left transition-colors",
-                      active
-                        ? "border-accent/50 bg-accent/10"
-                        : "border-ink/8 bg-paper/50 hover:border-ink/15"
-                    )}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-display text-[13px] font-bold text-ink">
-                        {film?.titleZh ?? s.filmId}
-                      </p>
-                      <p className="mt-0.5 font-mono text-[10px] font-medium text-ink/50">
-                        {s.date} {s.start}–{s.end}
-                      </p>
-                      <p className="mt-0.5 truncate font-mono text-[10px] text-ink/40">
-                        {cinema?.nameZh ?? s.cinemaId}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      aria-label="移除场次"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeScreening(s.id);
-                        if (focusId === s.id) setFocusId(null);
-                      }}
-                      className="shrink-0 rounded border border-ink/10 p-1.5 text-ink/40 hover:border-accent/40 hover:text-accent"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </aside>
-
-        <section className="mt-4 px-5 pb-8 lg:mt-0 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden lg:rounded-xl lg:border lg:border-ink/12 lg:bg-panel-raised/30 lg:px-0 lg:pb-0">
-          <p className="hidden shrink-0 border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40 lg:block">
-            <span className="text-accent">{"//"}</span> 时间轴画布
-            {focusId ? " · 已高亮左侧所选" : ""}
+        <div className="cm-frost hidden min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-ink/12 lg:flex">
+          <div className="h-1 w-full shrink-0 cm-hazard" aria-hidden />
+          <p className="shrink-0 border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">
+            <span className="text-accent">{"//"}</span> 场次清单 · {sorted.length}{" "}
+            场
           </p>
-          <div className="min-h-0 lg:flex-1 lg:overflow-auto lg:p-3">
-            <ScheduleCalendarView
-              screenings={screenings}
-              filmsById={festival.data.filmsById}
-              cinemasById={festival.data.cinemasById}
-              matrix={festival.data.matrix}
-              travelModes={festival.data.travelModes}
-              onRemove={removeScreening}
-              highlightId={focusId}
-            />
-            {screenings.length === 0 && (
-              <p className="mt-3 flex items-center justify-center gap-1.5 font-mono text-[11px] text-ink/35 lg:mt-6">
+          <div className="cm-scroll-auto min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain p-2">
+            {sorted.length === 0 && (
+              <p className="flex items-center justify-center gap-1.5 px-2 py-8 font-mono text-[11px] text-ink/35">
                 <Clapperboard className="h-3.5 w-3.5" />
-                <span className="lg:hidden">
-                  点 × 删除方案 · 双击方案名可克隆副本
-                </span>
-                <span className="hidden lg:inline">
-                  左侧清单为空时，时间轴也会是空的
-                </span>
+                去「选电影 / 挑场次」加入场次
               </p>
             )}
+            {sorted.map((s) => {
+              const film = festival.data.filmsById.get(s.filmId);
+              const cinema = festival.data.cinemasById.get(s.cinemaId);
+              const active = focusId === s.id;
+              return (
+                <div
+                  key={s.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setFocusId(s.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setFocusId(s.id);
+                    }
+                  }}
+                  className={cn(
+                    "flex items-start gap-2 rounded-md border px-2.5 py-2 text-left transition-colors",
+                    active
+                      ? "border-accent/50 bg-accent/10"
+                      : "border-ink/8 bg-paper/50 hover:border-ink/15"
+                  )}
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-display text-[13px] font-bold text-ink">
+                      {film?.titleZh ?? s.filmId}
+                    </p>
+                    <p className="mt-0.5 font-mono text-[10px] font-medium text-ink/50">
+                      {s.date} {s.start}–{s.end}
+                    </p>
+                    <p className="mt-0.5 truncate font-mono text-[10px] text-ink/40">
+                      {cinema?.nameZh ?? s.cinemaId}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="移除场次"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeScreening(s.id);
+                      if (focusId === s.id) setFocusId(null);
+                    }}
+                    className="shrink-0 rounded border border-ink/10 p-1.5 text-ink/40 hover:border-accent/40 hover:text-accent"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
-        </section>
-      </div>
+        </div>
+      </aside>
+
+      <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-5 pb-6 lg:rounded-xl lg:border lg:border-ink/12 lg:bg-panel-raised/30 lg:px-0 lg:pb-0">
+        <p className="hidden shrink-0 border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40 lg:block">
+          <span className="text-accent">{"//"}</span> 时间轴画布
+          {focusId ? " · 已高亮左侧所选" : ""}
+        </p>
+        <div className="cm-scroll-auto min-h-0 flex-1 overflow-auto lg:p-3">
+          <ScheduleCalendarView
+            screenings={screenings}
+            filmsById={festival.data.filmsById}
+            cinemasById={festival.data.cinemasById}
+            matrix={festival.data.matrix}
+            travelModes={festival.data.travelModes}
+            onRemove={removeScreening}
+            highlightId={focusId}
+          />
+          {screenings.length === 0 && (
+            <p className="mt-3 flex items-center justify-center gap-1.5 font-mono text-[11px] text-ink/35 lg:mt-6">
+              <Clapperboard className="h-3.5 w-3.5" />
+              点 × 删除方案 · 双击方案名可克隆副本
+            </p>
+          )}
+        </div>
+      </section>
 
       <PosterModal
         open={posterOpen}
@@ -282,7 +265,7 @@ function ScheduleHeader({
       <div
         className={cn(
           "cm-frost flex shrink-0 items-center justify-center border-2 border-ink font-display font-black tracking-tight",
-          compact ? "h-12 w-12 text-xl lg:h-12 lg:w-12" : "h-14 w-14 text-2xl"
+          compact ? "h-12 w-12 text-xl" : "h-14 w-14 text-2xl"
         )}
       >
         03

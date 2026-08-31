@@ -151,18 +151,22 @@ export const useScheduleStore = create<ScheduleState>()(
       name: "cinemap-schedule-v3",
       version: 1,
       migrate: (persisted, fromVersion) => {
-        const state = persisted as {
-          plans?: Plan[];
-          activePlanId?: string;
-        };
-        if (!state?.plans) return state as never;
-        if (fromVersion < 1) {
-          state.plans = state.plans.map((p) => ({
-            ...p,
-            name: cleanPlanName(p.name),
-          }));
+        try {
+          const state = persisted as {
+            plans?: Plan[];
+            activePlanId?: string;
+          };
+          if (!state?.plans) return state as never;
+          if (fromVersion < 1) {
+            state.plans = state.plans.map((p) => ({
+              ...p,
+              name: cleanPlanName(p.name ?? ""),
+            }));
+          }
+          return state as never;
+        } catch {
+          return persisted as never;
         }
-        return state as never;
       },
       partialize: (s) => ({
         plans: s.plans,

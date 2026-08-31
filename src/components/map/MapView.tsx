@@ -50,15 +50,16 @@ function CinemaListItems({
               else onSelect(c.id);
             }}
             className={cn(
-              "w-full rounded-md px-2.5 py-2 text-left transition-colors",
+              "w-full rounded-md text-left transition-colors",
+              "px-1.5 py-1 lg:px-2.5 lg:py-2",
               active ? "bg-accent text-white" : "text-ink hover:bg-ink/5"
             )}
           >
-            <p className="truncate font-mono text-[12px] font-bold">
+            <p className="truncate font-mono text-[11px] font-bold lg:text-[12px]">
               {lit ? (
                 <Sparkles
                   className={cn(
-                    "mr-1 inline h-3 w-3 shrink-0",
+                    "mr-1 inline h-2.5 w-2.5 shrink-0 lg:h-3 lg:w-3",
                     active ? "text-white/90" : "text-accent"
                   )}
                   aria-hidden
@@ -68,7 +69,7 @@ function CinemaListItems({
             </p>
             <p
               className={cn(
-                "mt-0.5 truncate font-mono text-[10px] font-medium",
+                "mt-0.5 truncate font-mono text-[9px] font-medium lg:text-[10px]",
                 active ? "text-white/75" : "text-ink/45"
               )}
             >
@@ -236,10 +237,10 @@ export function MapView() {
 
   const mapStage = (
     <div className="cm-map-gate relative min-h-0 flex-1 overflow-hidden rounded-2xl border border-ink/14 bg-map-bg/30 shadow-[0_10px_36px_color-mix(in_srgb,var(--ink)_12%,transparent)] ring-1 ring-inset ring-white/25">
-      {/* Mobile floating list */}
-      <div className="cm-frost absolute left-2.5 top-2.5 z-[400] flex max-h-[min(42vh,16.5rem)] w-[12.5rem] flex-col overflow-hidden rounded-xl border border-ink/12 shadow-md shadow-ink/10 lg:hidden">
-        <div className="h-1 w-full shrink-0 cm-hazard" aria-hidden />
-        <p className="shrink-0 border-b border-ink/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink/40">
+      {/* Mobile floating list — keep compact so map stays visible */}
+      <div className="cm-frost absolute left-2 top-2 z-[400] flex max-h-[min(34vh,12.5rem)] w-[9.75rem] flex-col overflow-hidden rounded-lg border border-ink/12 shadow-md shadow-ink/10 lg:hidden">
+        <div className="h-0.5 w-full shrink-0 cm-hazard" aria-hidden />
+        <p className="shrink-0 border-b border-ink/10 px-1.5 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-ink/40">
           <span className="text-accent">{"//"}</span> Sorted · Scroll
         </p>
         <div
@@ -248,7 +249,7 @@ export function MapView() {
           onClickCapture={suppressClickIfDragged}
           onScroll={onListScroll}
           className={cn(
-            "cm-scroll-auto min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain p-1.5 select-none",
+            "cm-scroll-auto min-h-0 flex-1 space-y-0 overflow-y-auto overscroll-contain p-1 select-none [-webkit-overflow-scrolling:touch]",
             listDragging ? "cursor-grabbing" : "cursor-grab",
             (listScrolling || listDragging) && "is-scrolling"
           )}

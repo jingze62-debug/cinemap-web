@@ -36,6 +36,9 @@ export function formatDirectorList(raw: string | undefined | null): string {
   return names.join(" · ");
 }
 
+const zhCollator =
+  typeof Intl !== "undefined" ? new Intl.Collator("zh") : null;
+
 /** Unique director names for filter menus, zh sort. */
 export function collectDirectorOptions(
   films: { director?: string }[]
@@ -44,5 +47,7 @@ export function collectDirectorOptions(
   for (const f of films) {
     for (const n of splitDirectorNames(f.director)) set.add(n);
   }
-  return Array.from(set).sort((a, b) => a.localeCompare(b, "zh"));
+  const list = Array.from(set);
+  if (zhCollator) return list.sort((a, b) => zhCollator.compare(a, b));
+  return list.sort();
 }

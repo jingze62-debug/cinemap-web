@@ -14,6 +14,13 @@
     "fetch:posters:retry": "node scripts/fetch-tmdb-posters.cjs --retry-failed",
     "build:travel": "node scripts/build-ors-transit-matrix.cjs"
   },
+  "browserslist": [
+    "chrome >= 90",
+    "firefox >= 90",
+    "safari >= 14",
+    "ios >= 14",
+    "not dead"
+  ],
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-scroll-area": "^1.2.18",

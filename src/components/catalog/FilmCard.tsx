@@ -18,6 +18,7 @@ import {
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function formatRuntime(min: number): string {
+  if (!Number.isFinite(min) || min <= 0) return "—";
   const h = Math.floor(min / 60);
   const m = min % 60;
   return m ? `${h}h ${m}m` : `${h}h`;
@@ -101,8 +102,8 @@ export function FilmCard({
 }: FilmCardProps) {
   const [from, to] = film.posterGradient ?? ["#c4b8a4", "#e85d33"];
   const meta = [
-    String(film.year),
-    film.countries.join("/"),
+    String(film.year ?? ""),
+    (film.countries ?? []).join("/") || "—",
     formatRuntime(film.runtimeMin),
   ].join(" · ");
   const scores = resolveFilmScores(film);
@@ -143,6 +144,7 @@ export function FilmCard({
               alt=""
               className="h-full w-full object-cover"
               loading="lazy"
+              decoding="async"
               draggable={false}
             />
           ) : null}
@@ -242,7 +244,7 @@ export function FilmCard({
                       <span className="font-mono text-[13px] font-black text-accent">
                         ¥{s.price}
                       </span>
-                      {s.techTags.map((tag) => (
+                      {(s.techTags ?? []).map((tag) => (
                         <span
                           key={tag}
                           className="rounded border border-ink/12 bg-chassis/40 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-ink/55"

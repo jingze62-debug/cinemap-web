@@ -81,33 +81,33 @@ export function CatalogSearchPanel({
     });
 
   return (
-    <section className="cm-frost rounded-xl border-2 border-ink/10">
-      <div className="h-1 w-full cm-hazard" aria-hidden />
-      <div className="relative space-y-2.5 p-3 pt-3.5">
+    <section className="cm-frost rounded-lg border border-ink/10 lg:rounded-xl lg:border-2">
+      <div className="h-0.5 w-full cm-hazard lg:h-1" aria-hidden />
+      <div className="relative space-y-1.5 p-2 pt-2 lg:space-y-2.5 lg:p-3 lg:pt-3.5">
         <div className="flex items-center justify-between gap-2">
-            <p className="font-mono text-[10px] font-bold tracking-[0.12em] text-ink/40">
-              <span className="text-accent">{"//"}</span> 筛选 · Find
-            </p>
+          <p className="font-mono text-[9px] font-bold tracking-[0.1em] text-ink/40 lg:text-[10px] lg:tracking-[0.12em]">
+            <span className="text-accent">{"//"}</span> 筛选 · Find
+          </p>
           {activeCount > 0 ? (
             <button
               type="button"
               onClick={clearAll}
-              className="inline-flex items-center gap-1 rounded-md border border-ink/12 bg-paper/60 px-2 py-0.5 font-mono text-[10px] font-bold text-ink/45 transition-colors hover:border-accent/40 hover:text-accent"
+              className="inline-flex items-center gap-1 rounded-md border border-ink/12 bg-paper/60 px-1.5 py-0.5 font-mono text-[9px] font-bold text-ink/45 transition-colors hover:border-accent/40 hover:text-accent lg:px-2 lg:text-[10px]"
             >
-              <RotateCcw className="h-3 w-3" />
+              <RotateCcw className="h-2.5 w-2.5 lg:h-3 lg:w-3" />
               清除 {activeCount}
             </button>
           ) : null}
         </div>
 
-        <div className="flex gap-1.5" role="tablist" aria-label="片单范围">
+        <div className="flex gap-1 lg:gap-1.5" role="tablist" aria-label="片单范围">
           <button
             type="button"
             role="tab"
             aria-selected={listScope === "all"}
             onClick={() => onListScopeChange("all")}
             className={cn(
-              "rounded-md border px-2.5 py-1.5 font-mono text-[11px] font-bold transition-colors",
+              "rounded-md border px-2 py-1 font-mono text-[10px] font-bold transition-colors lg:px-2.5 lg:py-1.5 lg:text-[11px]",
               listScope === "all"
                 ? "border-ink bg-ink text-paper"
                 : "border-ink/12 bg-paper/50 text-ink/55 hover:border-ink/25"
@@ -121,7 +121,7 @@ export function CatalogSearchPanel({
             aria-selected={listScope === "wanted"}
             onClick={() => onListScopeChange("wanted")}
             className={cn(
-              "inline-flex items-center gap-1 rounded-md border px-2.5 py-1.5 font-mono text-[11px] font-bold transition-colors",
+              "inline-flex items-center gap-1 rounded-md border px-2 py-1 font-mono text-[10px] font-bold transition-colors lg:px-2.5 lg:py-1.5 lg:text-[11px]",
               listScope === "wanted"
                 ? "border-accent bg-accent text-white"
                 : "border-ink/12 bg-paper/50 text-ink/55 hover:border-accent/40 hover:text-accent"
@@ -129,7 +129,7 @@ export function CatalogSearchPanel({
           >
             <Heart
               className={cn(
-                "h-3 w-3",
+                "h-2.5 w-2.5 lg:h-3 lg:w-3",
                 listScope === "wanted" && "fill-current"
               )}
             />
@@ -142,30 +142,31 @@ export function CatalogSearchPanel({
 
         <label className="relative block">
           <Search
-            className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink/35"
+            className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-ink/35 lg:left-2.5 lg:h-3.5 lg:w-3.5"
             aria-hidden
           />
           <input
             type="search"
             value={values.query}
             onChange={(e) => onChange({ query: e.target.value })}
-            placeholder="搜索影片 / 影院 / 导演（中英文）…"
+            placeholder="搜索影片 / 影院 / 导演…"
             className={cn(
-              "h-9 w-full rounded-md border border-ink/12 bg-paper/60 pl-8 pr-2",
-              "font-mono text-[13px] text-ink placeholder:text-ink/35",
+              "h-8 w-full rounded-md border border-ink/12 bg-paper/60 pl-7 pr-2 lg:h-9 lg:pl-8",
+              "font-mono text-[12px] text-ink placeholder:text-ink/35 lg:text-[13px]",
               "outline-none transition-[border-color,box-shadow]",
               "focus:border-accent/50 focus:ring-2 focus:ring-accent/20"
             )}
           />
         </label>
 
-        <div className="grid grid-cols-2 gap-x-2 gap-y-2.5 pt-0.5">
+        <div className="grid grid-cols-2 gap-x-1.5 gap-y-1.5 pt-0.5 lg:gap-x-2 lg:gap-y-2.5">
           <FilterSelect
             field="Date"
             label="全部日期"
             value={values.date}
             options={dateOptions}
             onChange={(date) => onChange({ date })}
+            compact
           />
           <FilterSelect
             field="Cinema"
@@ -174,6 +175,7 @@ export function CatalogSearchPanel({
             options={cinemaOptions}
             onChange={(cinemaId) => onChange({ cinemaId })}
             expand="end"
+            compact
           />
           <FilterSelect
             field="Section"
@@ -181,6 +183,7 @@ export function CatalogSearchPanel({
             value={values.section}
             options={sectionOptions}
             onChange={(section) => onChange({ section })}
+            compact
           />
           <FilterSelect
             field="Director"
@@ -190,6 +193,7 @@ export function CatalogSearchPanel({
             onChange={(director) => onChange({ director })}
             expand="end"
             searchableAbove={0}
+            compact
           />
         </div>
       </div>

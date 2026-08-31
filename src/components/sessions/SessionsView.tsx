@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type UIEvent } from "react";
 import { Check, ChevronDown, Plus, Search, Star, Trash2 } from "lucide-react";
 import { useFestivalData } from "@/hooks/useFestivalData";
 import { useDragScroll } from "@/hooks/useDragScroll";
@@ -15,9 +15,13 @@ import {
   splitDirectorNames,
 } from "@/utils/directors";
 import { FilterSelect } from "@/components/ui/FilterSelect";
+import { ScrollHideChrome } from "@/components/shell/ScrollHideChrome";
+import { useScrollHideChrome } from "@/hooks/useScrollHideChrome";
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
+const ROWS_PER_DAY = 16;
+const zhCollator = new Intl.Collator("zh");
 
 function formatDateLabel(date: string): string {
   const d = new Date(`${date}T12:00:00`);
@@ -33,7 +37,8 @@ function formatDateParts(date: string) {
   };
 }
 
-function formatRuntime(min: number): string {
+function formatRuntime(min?: number): string {
+  if (!min) return "—";
   const h = Math.floor(min / 60);
   const m = min % 60;
   return m ? `${h}h ${m}m` : `${h}h`;
@@ -59,14 +64,14 @@ function ChipRow({ label, options, value, onChange }: ChipRowProps) {
 
   return (
     <div className="min-w-0">
-      <p className="mb-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink/40">
+      <p className="mb-0.5 font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-ink/40 lg:mb-1 lg:text-[9px] lg:tracking-[0.14em]">
         <span className="text-accent">{"//"}</span> {label}
       </p>
       <div
         ref={ref}
         onClickCapture={suppressClickIfDragged}
         className={cn(
-          "flex gap-1.5 overflow-x-auto overscroll-x-contain pb-0.5 scrollbar-none select-none",
+          "flex gap-1 overflow-x-auto overscroll-x-contain pb-0.5 scrollbar-none select-none lg:gap-1.5",
           dragging ? "cursor-grabbing" : "cursor-grab"
         )}
       >
@@ -78,7 +83,7 @@ function ChipRow({ label, options, value, onChange }: ChipRowProps) {
               type="button"
               onClick={() => onChange(opt.value)}
               className={cn(
-                "shrink-0 rounded-md border px-2.5 py-1 font-mono text-[11px] font-semibold whitespace-nowrap transition-colors",
+                "shrink-0 rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold whitespace-nowrap transition-colors lg:px-2.5 lg:py-1 lg:text-[11px]",
                 active
                   ? "border-accent bg-accent text-white"
                   : "border-ink/12 cm-frost-soft text-ink/65 hover:border-accent/35 hover:text-accent"
@@ -88,7 +93,7 @@ function ChipRow({ label, options, value, onChange }: ChipRowProps) {
               {typeof opt.count === "number" && (
                 <span
                   className={cn(
-                    "ml-1.5 tabular-nums",
+                    "ml-1 tabular-nums lg:ml-1.5",
                     active ? "text-white/75" : "text-ink/30"
                   )}
                 >
@@ -132,7 +137,7 @@ type SessionRowProps = {
   onToggleWant: () => void;
 };
 
-function SessionRow({
+const SessionRow = memo(function SessionRow({
   screening,
   film,
   cinemaName,
@@ -144,6 +149,8 @@ function SessionRow({
   onToggleWant,
 }: SessionRowProps) {
   const scores = resolveFilmScores(film);
+  const techTag = screening.techTags?.[0];
+  const countries = film.countries?.join("/") ?? "—";
 
   return (
     <article
@@ -177,16 +184,15 @@ function SessionRow({
           <div className="min-w-0 flex-1">
             <h3 className="font-display text-[15px] font-black leading-snug tracking-tight text-ink">
               {film.titleZh}
-              {screening.techTags[0] ? (
+              {techTag ? (
                 <span className="ml-1 font-mono text-[11px] font-bold text-accent">
-                  ({screening.techTags[0]})
+                  ({techTag})
                 </span>
               ) : null}
             </h3>
             <p className="mt-0.5 truncate font-mono text-[10px] text-ink/40">
-              {film.year} · {film.countries.join("/")} ·{" "}
-              {formatRuntime(film.runtimeMin)} · Dir{" "}
-              {formatDirectorCredit(film.director)}
+              {film.year} · {countries} · {formatRuntime(film.runtimeMin)} ·
+              Dir {formatDirectorCredit(film.director)}
             </p>
           </div>
           <button
@@ -213,7 +219,7 @@ function SessionRow({
           <span className="font-mono text-[13px] font-black text-accent">
             ¥{screening.price}
           </span>
-          {screening.techTags.slice(0, 3).map((t) => (
+          {(screening.techTags ?? []).slice(0, 3).map((t) => (
             <span
               key={t}
               className="rounded border border-ink/12 bg-chassis/40 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-ink/55"
@@ -278,7 +284,7 @@ function SessionRow({
       </div>
     </article>
   );
-}
+});
 
 export function SessionsView() {
   const festival = useFestivalData();
@@ -299,6 +305,9 @@ export function SessionsView() {
   const [collapsedDates, setCollapsedDates] = useState<Record<string, boolean>>(
     {}
   );
+  const [visibleByDate, setVisibleByDate] = useState<Record<string, number>>(
+    {}
+  );
   const [scheduledCollapsed, setScheduledCollapsed] = useState(false);
   const [listScrolling, setListScrolling] = useState(false);
   const listScrollTimer = useRef(0);
@@ -307,8 +316,11 @@ export function SessionsView() {
     dragging,
     suppressClickIfDragged,
   } = useDragScroll("y", { target: "self" });
+  const { filtersHidden, onScroll: onScrollHideFilters, showFilters } =
+    useScrollHideChrome();
 
-  const onListScroll = () => {
+  const onListScroll = (e: UIEvent<HTMLElement>) => {
+    onScrollHideFilters(e);
     setListScrolling(true);
     window.clearTimeout(listScrollTimer.current);
     listScrollTimer.current = window.setTimeout(
@@ -317,8 +329,18 @@ export function SessionsView() {
     );
   };
 
-  const toggleDateCollapsed = (date: string) => {
-    setCollapsedDates((prev) => ({ ...prev, [date]: !prev[date] }));
+  const toggleDateCollapsed = (dateKey: string, defaultCollapsed: boolean) => {
+    setCollapsedDates((prev) => {
+      const current = prev[dateKey] ?? defaultCollapsed;
+      return { ...prev, [dateKey]: !current };
+    });
+  };
+
+  const loadMoreForDate = (dateKey: string, total: number) => {
+    setVisibleByDate((prev) => ({
+      ...prev,
+      [dateKey]: Math.min((prev[dateKey] ?? ROWS_PER_DAY) + ROWS_PER_DAY, total),
+    }));
   };
 
   const activePlan = plans.find((p) => p.id === activePlanId);
@@ -419,7 +441,6 @@ export function SessionsView() {
       return hay.includes(q);
     });
 
-    // Chronological within each day (scheduled items are pinned above date groups)
     return [...list].sort((a, b) => {
       const dateCmp = a.screening.date.localeCompare(b.screening.date);
       if (dateCmp !== 0) return dateCmp;
@@ -437,7 +458,6 @@ export function SessionsView() {
     wanted,
   ]);
 
-  /** Screenings already in the active plan — pinned above day groups */
   const scheduledRows = useMemo(() => {
     if (festival.status !== "ready" || addedSet.size === 0) return [];
     const { screeningsById, filmsById } = festival.data;
@@ -465,6 +485,72 @@ export function SessionsView() {
     }
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [filtered]);
+
+  useEffect(() => {
+    setVisibleByDate({});
+    showFilters();
+  }, [query, date, cinemaId, section, director, scope, showFilters]);
+
+  const total = allRows.length;
+
+  const dateOptions = useMemo((): ChipOption[] => {
+    if (festival.status !== "ready") return [];
+    return [
+      { value: "全部", label: "全部日期", count: total },
+      ...Array.from(filterMeta.dateCounts.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([d, n]) => ({
+          value: d,
+          label: formatDateLabel(d),
+          count: n,
+        })),
+    ];
+  }, [festival.status, filterMeta.dateCounts, total]);
+
+  const cinemaOptions = useMemo((): ChipOption[] => {
+    if (festival.status !== "ready") return [];
+    const { cinemas } = festival.data;
+    return [
+      { value: "全部", label: "全部影院", count: total },
+      ...[...cinemas]
+        .sort(
+          (a, b) =>
+            (filterMeta.cinemaCounts.get(b.id) ?? 0) -
+            (filterMeta.cinemaCounts.get(a.id) ?? 0)
+        )
+        .filter((c) => filterMeta.cinemaCounts.has(c.id))
+        .map((c) => ({
+          value: c.id,
+          label: c.nameZh,
+          count: filterMeta.cinemaCounts.get(c.id) ?? 0,
+        })),
+    ];
+  }, [festival, filterMeta.cinemaCounts, total]);
+
+  const sectionOptions = useMemo((): ChipOption[] => {
+    if (festival.status !== "ready") return [];
+    const { dataset } = festival.data;
+    return [
+      { value: "全部", label: "全部单元", count: total },
+      ...dataset.sections
+        .filter((s) => s !== "全部" && filterMeta.sectionCounts.has(s))
+        .map((s) => ({
+          value: s,
+          label: s,
+          count: filterMeta.sectionCounts.get(s) ?? 0,
+        })),
+    ];
+  }, [festival, filterMeta.sectionCounts, total]);
+
+  const directorOptions = useMemo((): ChipOption[] => {
+    if (festival.status !== "ready") return [];
+    return [
+      { value: "全部", label: "全部导演", count: total },
+      ...Array.from(filterMeta.directorCounts.entries())
+        .sort((a, b) => zhCollator.compare(a[0], b[0]))
+        .map(([d, n]) => ({ value: d, label: d, count: n })),
+    ];
+  }, [festival.status, filterMeta.directorCounts, total]);
 
   const hasActiveFilter =
     date !== "全部" ||
@@ -507,53 +593,7 @@ export function SessionsView() {
     );
   }
 
-  const { dataset, cinemas, cinemasById } = festival.data;
-  const total = allRows.length;
-
-  const dateOptions: ChipOption[] = [
-    { value: "全部", label: "全部日期", count: total },
-    ...Array.from(filterMeta.dateCounts.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([d, n]) => ({
-        value: d,
-        label: formatDateLabel(d),
-        count: n,
-      })),
-  ];
-
-  const cinemaOptions: ChipOption[] = [
-    { value: "全部", label: "全部影院", count: total },
-    ...[...cinemas]
-      .sort(
-        (a, b) =>
-          (filterMeta.cinemaCounts.get(b.id) ?? 0) -
-          (filterMeta.cinemaCounts.get(a.id) ?? 0)
-      )
-      .filter((c) => filterMeta.cinemaCounts.has(c.id))
-      .map((c) => ({
-        value: c.id,
-        label: c.nameZh,
-        count: filterMeta.cinemaCounts.get(c.id) ?? 0,
-      })),
-  ];
-
-  const sectionOptions: ChipOption[] = [
-    { value: "全部", label: "全部单元", count: total },
-    ...dataset.sections
-      .filter((s) => s !== "全部" && filterMeta.sectionCounts.has(s))
-      .map((s) => ({
-        value: s,
-        label: s,
-        count: filterMeta.sectionCounts.get(s) ?? 0,
-      })),
-  ];
-
-  const directorOptions: ChipOption[] = [
-    { value: "全部", label: "全部导演", count: total },
-    ...Array.from(filterMeta.directorCounts.entries())
-      .sort((a, b) => a[0].localeCompare(b[0], "zh"))
-      .map(([d, n]) => ({ value: d, label: d, count: n })),
-  ];
+  const { dataset, cinemasById } = festival.data;
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-paper text-ink lg:flex-row lg:gap-4 lg:px-4 lg:pb-4 lg:pt-4">
@@ -583,110 +623,122 @@ export function SessionsView() {
           </div>
         </header>
 
-        <div className="shrink-0 px-5 lg:px-0">
-          <div className="cm-frost rounded-xl border-2 border-ink/10">
-            <div className="h-1 w-full cm-hazard" aria-hidden />
-            <div className="space-y-2.5 p-3">
-              <p className="font-mono text-[10px] font-bold tracking-[0.12em] text-ink/40">
-                <span className="text-accent">{"//"}</span> 筛选 · Find
-              </p>
-              <label className="relative block">
-                <Search
-                  className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink/35"
-                  aria-hidden
-                />
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="搜片名、导演、影院..."
-                  className="h-9 w-full rounded-md border border-ink/12 bg-paper/60 pl-8 pr-3 font-mono text-[13px] text-ink placeholder:text-ink/35 outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20"
-                />
-              </label>
-
-              <div className="flex flex-wrap gap-1.5">
-                {(
-                  [
-                    { id: "all" as const, label: "全部场次" },
-                    { id: "wanted" as const, label: "已标星影片" },
-                  ] as const
-                ).map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setScope(tab.id)}
-                    className={cn(
-                      "rounded-md border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors",
-                      scope === tab.id
-                        ? "border-ink bg-ink text-paper"
-                        : "border-ink/12 bg-paper/50 text-ink/55 hover:border-ink/25"
-                    )}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setFiltersOpen((v) => !v)}
-                  aria-expanded={filtersOpen}
-                  className={cn(
-                    "inline-flex items-center gap-1 rounded-md border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors",
-                    filtersOpen
-                      ? "border-accent bg-accent/10 text-accent"
-                      : "border-ink/12 bg-paper/50 text-ink/55"
-                  )}
-                >
-                  筛选
-                  <ChevronDown
-                    className={cn(
-                      "h-3.5 w-3.5 transition-transform",
-                      filtersOpen && "rotate-180"
-                    )}
+        <ScrollHideChrome hidden={filtersHidden}>
+          <div className="px-3 lg:px-0">
+            <div className="cm-frost rounded-lg border border-ink/10 lg:rounded-xl lg:border-2">
+              <div className="h-0.5 w-full cm-hazard lg:h-1" aria-hidden />
+              <div className="space-y-1.5 p-2 lg:space-y-2.5 lg:p-3">
+                <p className="font-mono text-[9px] font-bold tracking-[0.1em] text-ink/40 lg:text-[10px] lg:tracking-[0.12em]">
+                  <span className="text-accent">{"//"}</span> 筛选 · Find
+                </p>
+                <label className="relative block">
+                  <Search
+                    className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-ink/35 lg:left-2.5 lg:h-3.5 lg:w-3.5"
+                    aria-hidden
                   />
-                </button>
-                {hasActiveFilter && (
+                  <input
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="搜片名、导演、影院..."
+                    className="h-8 w-full rounded-md border border-ink/12 bg-paper/60 pl-7 pr-2.5 font-mono text-[12px] text-ink placeholder:text-ink/35 outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20 lg:h-9 lg:pl-8 lg:pr-3 lg:text-[13px]"
+                  />
+                </label>
+
+                <div className="flex flex-wrap gap-1 lg:gap-1.5">
+                  {(
+                    [
+                      { id: "all" as const, label: "全部场次" },
+                      { id: "wanted" as const, label: "已标星影片" },
+                    ] as const
+                  ).map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setScope(tab.id)}
+                      className={cn(
+                        "rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold transition-colors lg:px-2.5 lg:py-1 lg:text-[11px]",
+                        scope === tab.id
+                          ? "border-ink bg-ink text-paper"
+                          : "border-ink/12 bg-paper/50 text-ink/55 hover:border-ink/25"
+                      )}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                   <button
                     type="button"
-                    onClick={clearFilters}
-                    className="rounded-md border border-ink/12 px-2.5 py-1 font-mono text-[11px] font-bold text-ink/45 hover:border-accent/40 hover:text-accent"
+                    onClick={() => setFiltersOpen((v) => !v)}
+                    aria-expanded={filtersOpen}
+                    className={cn(
+                      "inline-flex items-center gap-0.5 rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold transition-colors lg:gap-1 lg:px-2.5 lg:py-1 lg:text-[11px]",
+                      filtersOpen
+                        ? "border-accent bg-accent/10 text-accent"
+                        : "border-ink/12 bg-paper/50 text-ink/55"
+                    )}
                   >
-                    清除
+                    筛选
+                    <ChevronDown
+                      className={cn(
+                        "h-3 w-3 transition-transform lg:h-3.5 lg:w-3.5",
+                        filtersOpen && "rotate-180"
+                      )}
+                    />
                   </button>
-                )}
+                  {hasActiveFilter && (
+                    <button
+                      type="button"
+                      onClick={clearFilters}
+                      className="rounded-md border border-ink/12 px-2 py-0.5 font-mono text-[10px] font-bold text-ink/45 hover:border-accent/40 hover:text-accent lg:px-2.5 lg:py-1 lg:text-[11px]"
+                    >
+                      清除
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {filtersOpen && (
-          <div className="mt-2 shrink-0 space-y-2 border-y border-ink/10 bg-chassis/35 px-5 py-2.5 lg:mx-0 lg:rounded-lg lg:border lg:px-3">
-            <ChipRow
-              label="日期"
-              options={dateOptions}
-              value={date}
-              onChange={setDate}
-            />
-            <ChipRow
-              label="影院"
-              options={cinemaOptions}
-              value={cinemaId}
-              onChange={setCinemaId}
-            />
-            <ChipRow
-              label="单元"
-              options={sectionOptions}
-              value={section}
-              onChange={setSection}
-            />
-            <FilterSelect
-              field="Director"
-              label="全部导演"
-              value={director}
-              options={directorOptions}
-              onChange={setDirector}
-              searchableAbove={0}
-            />
-          </div>
+          {filtersOpen && (
+            <div className="mt-1.5 space-y-1.5 border-y border-ink/10 bg-chassis/35 px-3 py-2 lg:mt-2 lg:space-y-2 lg:rounded-lg lg:border lg:px-3 lg:py-2.5">
+              <ChipRow
+                label="日期"
+                options={dateOptions}
+                value={date}
+                onChange={setDate}
+              />
+              <ChipRow
+                label="影院"
+                options={cinemaOptions}
+                value={cinemaId}
+                onChange={setCinemaId}
+              />
+              <ChipRow
+                label="单元"
+                options={sectionOptions}
+                value={section}
+                onChange={setSection}
+              />
+              <FilterSelect
+                field="Director"
+                label="全部导演"
+                value={director}
+                options={directorOptions}
+                onChange={setDirector}
+                searchableAbove={0}
+                compact
+              />
+            </div>
+          )}
+        </ScrollHideChrome>
+        {filtersHidden && (
+          <button
+            type="button"
+            onClick={showFilters}
+            className="mx-3 mb-1 shrink-0 rounded-md border border-ink/10 bg-panel-raised/70 px-2.5 py-1 font-mono text-[10px] font-bold text-ink/45 transition hover:border-accent/35 hover:text-accent lg:hidden"
+          >
+            <span className="text-accent">{"//"}</span> 筛选 · 展开
+          </button>
         )}
 
         <div
@@ -694,13 +746,12 @@ export function SessionsView() {
           onClickCapture={suppressClickIfDragged}
           onScroll={onListScroll}
           className={cn(
-            "cm-scroll-auto mt-3 min-h-0 flex-1 select-none overflow-y-auto overscroll-contain [&_input]:cursor-text [&_input]:select-text",
+            "cm-scroll-auto mt-2 min-h-0 flex-1 select-none overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] [&_input]:cursor-text [&_input]:select-text lg:mt-3",
             dragging ? "cursor-grabbing" : "cursor-grab",
             (listScrolling || dragging) && "is-scrolling"
           )}
         >
-          <div className="space-y-6 px-5 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] pt-1 lg:px-0 lg:pb-2">
-            {/* Mobile-only: scheduled block in scroll */}
+          <div className="space-y-6 px-5 pb-4 pt-1 lg:px-0 lg:pb-2">
             {scheduledRows.length > 0 && (
               <section className="animate-fade-up lg:hidden">
                 <header className="mb-2.5 flex items-end justify-between gap-3 border-b-2 border-signal/25 pb-2">
@@ -768,9 +819,14 @@ export function SessionsView() {
                 </div>
               )
             ) : (
-              byDateGroups.map(([d, rows]) => {
+              byDateGroups.map(([d, rows], groupIndex) => {
                 const parts = formatDateParts(d);
-                const collapsed = Boolean(collapsedDates[d]);
+                const defaultCollapsed = groupIndex !== 0;
+                const collapsed = collapsedDates[d] ?? defaultCollapsed;
+                const visibleLimit = visibleByDate[d] ?? ROWS_PER_DAY;
+                const visibleRows = rows.slice(0, visibleLimit);
+                const hasMore = rows.length > visibleLimit;
+
                 return (
                   <section key={d} className="animate-fade-up">
                     <header className="mb-2.5 flex items-end justify-between gap-3 border-b-2 border-ink/10 pb-2">
@@ -793,7 +849,7 @@ export function SessionsView() {
                         </span>
                         <button
                           type="button"
-                          onClick={() => toggleDateCollapsed(d)}
+                          onClick={() => toggleDateCollapsed(d, defaultCollapsed)}
                           aria-expanded={!collapsed}
                           className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-ink/12 bg-paper/60 text-ink/50 hover:border-accent/40 hover:text-accent"
                         >
@@ -809,7 +865,7 @@ export function SessionsView() {
 
                     {!collapsed && (
                       <div className="space-y-2">
-                        {rows.map(({ screening: s, film }) => {
+                        {visibleRows.map(({ screening: s, film }) => {
                           const cinema = cinemasById.get(s.cinemaId);
                           const added = addedSet.has(s.id);
                           const conflict =
@@ -829,6 +885,15 @@ export function SessionsView() {
                             />
                           );
                         })}
+                        {hasMore && (
+                          <button
+                            type="button"
+                            onClick={() => loadMoreForDate(d, rows.length)}
+                            className="w-full rounded-lg border border-dashed border-ink/20 bg-paper/40 py-2.5 font-mono text-[11px] font-bold text-ink/50 transition-colors hover:border-accent/40 hover:text-accent"
+                          >
+                            加载更多（还有 {rows.length - visibleLimit} 场）
+                          </button>
+                        )}
                       </div>
                     )}
                   </section>
@@ -839,7 +904,6 @@ export function SessionsView() {
         </div>
       </div>
 
-      {/* Desktop: always-visible plan pane */}
       <aside className="hidden min-h-0 w-[min(100%,24rem)] shrink-0 flex-col overflow-hidden rounded-xl border border-ink/12 bg-panel-raised/30 lg:flex">
         <div className="shrink-0 border-b border-ink/10 px-3 py-2.5">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40">

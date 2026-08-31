@@ -105,7 +105,10 @@ function sendRemote(event: AnalyticsEvent): void {
   const url = remoteEndpoint();
   const body = JSON.stringify(event);
   try {
-    if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+    if (
+      typeof navigator !== "undefined" &&
+      typeof navigator.sendBeacon === "function"
+    ) {
       const ok = navigator.sendBeacon(
         url,
         new Blob([body], { type: "application/json" })
@@ -122,6 +125,8 @@ function sendRemote(event: AnalyticsEvent): void {
       body,
       keepalive: true,
       mode: "cors",
+    }).catch(() => {
+      /* ignore network / CORS / offline */
     });
   } catch {
     /* offline / blocked */
@@ -134,24 +139,28 @@ export function track(
   props?: AnalyticsProps
 ): void {
   if (typeof window === "undefined") return;
-  const event: AnalyticsEvent = {
-    id: uid(),
-    name,
-    ts: Date.now(),
-    sessionId: getSessionId(),
-    props: props ? sanitizeProps(props) : undefined,
-  };
-  const store = readStore();
-  store.events.push(event);
-  if (store.events.length > MAX_EVENTS) {
-    store.events = store.events.slice(-MAX_EVENTS);
-  }
-  writeStore(store);
-  sendRemote(event);
+  try {
+    const event: AnalyticsEvent = {
+      id: uid(),
+      name,
+      ts: Date.now(),
+      sessionId: getSessionId(),
+      props: props ? sanitizeProps(props) : undefined,
+    };
+    const store = readStore();
+    store.events.push(event);
+    if (store.events.length > MAX_EVENTS) {
+      store.events = store.events.slice(-MAX_EVENTS);
+    }
+    writeStore(store);
+    sendRemote(event);
 
-  if (process.env.NODE_ENV === "development") {
-    // eslint-disable-next-line no-console
-    console.debug("[analytics]", name, props ?? {});
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.debug("[analytics]", name, props ?? {});
+    }
+  } catch {
+    /* never break the product UI for analytics */
   }
 }
 

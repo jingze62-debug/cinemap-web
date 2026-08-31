@@ -283,15 +283,18 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
           <ThemeSwitcher />
         </div>
 
-        <footer className="mt-8 border-t-2 border-ink/10 pt-4 text-[10px] font-semibold tracking-[0.12em] text-ink/40">
+        <footer className="mt-8 border-t-2 border-ink/10 pt-4 font-mono text-[10px] font-semibold tracking-[0.12em] text-ink/35">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <a
               href="/analytics/"
-              className="text-ink/45 underline-offset-2 hover:text-accent hover:underline"
+              className="inline-flex items-center gap-1.5 text-ink/30 transition hover:text-accent"
+              title="内部数据"
+              aria-label="内部数据"
             >
-              埋点 / 漏斗
+              <span className="cm-status-dot opacity-60" />
+              Live
             </a>
-            <span className="text-accent">信号结束</span>
+            <span className="text-accent/70">信号结束</span>
           </div>
         </footer>
       </div>

@@ -20,6 +20,8 @@ type FilterSelectProps = {
   expand?: "start" | "end";
   /** Show typeahead when option count exceeds this (default 12). Set 0 to always show. */
   searchableAbove?: number;
+  /** Tighter control height — used on mobile catalog filters. */
+  compact?: boolean;
 };
 
 export function FilterSelect({
@@ -30,6 +32,7 @@ export function FilterSelect({
   onChange,
   expand = "start",
   searchableAbove = 12,
+  compact = false,
 }: FilterSelectProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -201,7 +204,12 @@ export function FilterSelect({
 
   return (
     <div className="relative min-w-0 overflow-visible" ref={rootRef}>
-      <p className="mb-1 overflow-visible pt-px font-mono text-[9px] font-bold uppercase leading-[1.35] tracking-[0.14em] text-ink/40">
+      <p
+        className={cn(
+          "overflow-visible font-mono font-bold uppercase leading-[1.35] tracking-[0.14em] text-ink/40",
+          compact ? "mb-0.5 pt-0 text-[8px]" : "mb-1 pt-px text-[9px]"
+        )}
+      >
         <span className="text-accent">{"//"}</span> {field}
       </p>
       <button
@@ -212,9 +220,11 @@ export function FilterSelect({
         aria-controls={listId}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex min-h-9 w-full items-center justify-between gap-1 rounded-md border px-2 py-1.5 text-left transition-colors",
-          "text-[12px] leading-[1.45]",
+          "flex w-full items-center justify-between gap-1 rounded-md border text-left transition-colors",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30",
+          compact
+            ? "min-h-7 px-1.5 py-1 text-[11px] leading-[1.3] lg:min-h-9 lg:px-2 lg:py-1.5 lg:text-[12px] lg:leading-[1.45]"
+            : "min-h-9 px-2 py-1.5 text-[12px] leading-[1.45]",
           isFiltered
             ? "border-accent/50 bg-accent/10 font-bold text-accent"
             : open
@@ -227,7 +237,8 @@ export function FilterSelect({
         </span>
         <ChevronDown
           className={cn(
-            "h-3 w-3 shrink-0 text-ink/35 transition-transform duration-200",
+            "shrink-0 text-ink/35 transition-transform duration-200",
+            compact ? "h-2.5 w-2.5 lg:h-3 lg:w-3" : "h-3 w-3",
             open && "rotate-180 text-accent"
           )}
         />

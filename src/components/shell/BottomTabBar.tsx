@@ -20,7 +20,7 @@ const TABS: {
 type BottomTabBarProps = {
   active: MainTab;
   onChange: (tab: MainTab) => void;
-  /** bottom = mobile fixed; top = desktop header strip */
+  /** bottom = mobile dock; top = desktop header strip */
   variant?: "bottom" | "top";
 };
 
@@ -66,10 +66,10 @@ export function BottomTabBar({
 
   return (
     <nav
-      className="safe-bottom fixed inset-x-0 bottom-0 z-[600] border-t border-ink/15 bg-panel-raised/82 backdrop-blur-xl"
+      className="safe-bottom shrink-0 border-t border-ink/15 bg-panel-raised/92 backdrop-blur-xl"
       aria-label="主导航"
     >
-      <div className="mx-auto flex h-16 max-w-lg items-stretch justify-around px-0.5">
+      <div className="mx-auto flex max-w-lg items-stretch justify-around px-0.5 pt-1.5 pb-1.5">
         {TABS.map(({ id, label, code, icon: Icon }) => {
           const isActive = id === active;
           return (
@@ -78,28 +78,34 @@ export function BottomTabBar({
               type="button"
               onClick={() => onChange(id)}
               className={cn(
-                "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 transition-colors",
+                "relative flex min-w-0 flex-1 flex-col items-center gap-0.5 px-0.5 pb-1.5 pt-0.5 transition-colors",
                 isActive ? "text-accent" : "text-ink/45 hover:text-ink/75"
               )}
               aria-current={isActive ? "page" : undefined}
             >
               <span
                 className={cn(
-                  "font-mono text-[8px] font-bold tracking-[0.12em]",
+                  "font-mono text-[8px] font-bold leading-none tracking-[0.12em]",
                   isActive ? "text-signal-dim" : "text-ink/35"
                 )}
               >
                 {code}
               </span>
               <Icon
-                className={cn("h-[18px] w-[18px]", isActive && "stroke-[2.4]")}
+                className={cn(
+                  "h-[18px] w-[18px] shrink-0",
+                  isActive && "stroke-[2.4]"
+                )}
                 aria-hidden
               />
-              <span className="font-mono text-[10px] font-bold tracking-wide">
+              <span className="max-w-full truncate px-0.5 font-mono text-[10px] font-bold leading-none tracking-wide">
                 {label}
               </span>
               {isActive && (
-                <span className="mt-0.5 h-0.5 w-5 rounded-full bg-accent" />
+                <span
+                  className="absolute bottom-0.5 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-accent"
+                  aria-hidden
+                />
               )}
             </button>
           );

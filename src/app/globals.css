@@ -342,11 +342,12 @@ body {
   }
 
   .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* Extra room for mobile browser chrome when safe-area is 0 */
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
   }
 
   .safe-main {
-    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
   }
 
   .safe-top {
