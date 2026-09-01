@@ -25,7 +25,7 @@ export function useCityMapCinemas(): State {
         setState({
           status: "ready",
           cinemas: [...cinemas].sort(
-            (a, b) => b.screeningCount - a.screeningCount
+            (a, b) => (b.heat ?? 0) - (a.heat ?? 0) || b.nameZh.localeCompare(a.nameZh, "zh")
           ),
         });
       })

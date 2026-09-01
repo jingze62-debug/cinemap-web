@@ -211,10 +211,11 @@ export function localDateISO(d = new Date()): string {
 }
 
 /**
- * Recompute venue stats from the live schedule:
- * - screeningCount: total screenings at this cinema
+ * Recompute venue stats from the schedule you pass in.
+ * City map should pass the union of all festival films (cross-festival heat).
+ * - screeningCount: total screenings at this cinema (internal / sort)
  * - todayCount: screenings whose date === today (0 if none)
- * - heat: relative to the busiest cinema (max = 100), others proportional
+ * - heat: cinema screenings ÷ busiest cinema × 100 (max venue = 100)
  */
 export function enrichCinemaStats(
   cinemas: Cinema[],

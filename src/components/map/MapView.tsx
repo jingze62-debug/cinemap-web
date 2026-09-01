@@ -73,7 +73,7 @@ function CinemaListItems({
                 active ? "text-white/75" : "text-ink/45"
               )}
             >
-              {c.screeningCount}场 · 热度 {c.heat} · {c.district}
+              热度 {c.heat ?? 0} · {c.district}
               {lit ? " · 已点亮" : ""}
             </p>
           </button>

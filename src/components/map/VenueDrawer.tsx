@@ -444,7 +444,7 @@ export function VenueDrawer({
                 {cinema.nameZh}
               </h2>
               <p className="mt-1 text-xs text-ink/50">
-                {cinema.district} · 影院 · {cinema.screeningCount}场
+                {cinema.district} · 影院 · 热度 {cinema.heat ?? 0}
               </p>
             </div>
             <div className="flex shrink-0 flex-col items-stretch gap-1.5">
@@ -475,13 +475,12 @@ export function VenueDrawer({
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 rounded-2xl border border-ink/10 bg-white/70 p-3 text-center">
+        <div className="grid grid-cols-2 gap-2 rounded-2xl border border-ink/10 bg-white/70 p-3 text-center">
           <Stat
             value={checkedIn ? 1 : 0}
             label="我的点亮"
             highlight={checkedIn}
           />
-          <Stat value={cinema.todayCount ?? 0} label="今日场次" />
           <Stat value={cinema.heat ?? 0} label="热度" />
         </div>
 
