@@ -414,6 +414,18 @@ body {
   border-radius: inherit;
 }
 
+/*
+ * Black UI theme: invert only the tile pane so the basemap goes dark.
+ * Marker pane stays unfiltered — dots use --ink / --accent and stay visible.
+ */
+[data-theme="black"] .cm-map-gate .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.95);
+}
+
+[data-theme="black"] .cm-map-gate .leaflet-container {
+  background: #0c0c0c;
+}
+
 /* Calendar internal grid lines (ink/opacity Tailwind often fails on CSS vars) */
 .cm-cal-gate {
   --cal-line: color-mix(in srgb, var(--ink) 9%, transparent);
@@ -600,7 +612,7 @@ body {
   border-width: 1.5px;
 }
 
-/* Unlit venues — soft ink dots */
+/* Unlit venues — soft ink dots (must contrast with light basemap / inverted black map) */
 .cinemap-marker-dim-wrap {
   position: relative;
   display: block;
@@ -618,10 +630,24 @@ body {
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
-    color-mix(in srgb, var(--ink) 48%, transparent) 0%,
-    color-mix(in srgb, var(--ink) 22%, transparent) 55%,
+    color-mix(in srgb, var(--map-dot, var(--ink)) 55%, transparent) 0%,
+    color-mix(in srgb, var(--map-dot, var(--ink)) 26%, transparent) 55%,
     transparent 78%
   );
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 55%, transparent);
+}
+
+[data-theme="black"] .cinemap-marker-dim {
+  /* Light dots on inverted dark basemap */
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--ink) 78%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 38%, transparent) 55%,
+    transparent 78%
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--paper) 70%, transparent),
+    0 0 8px color-mix(in srgb, var(--ink) 28%, transparent);
 }
 
 .cinemap-marker-dim-wrap--active .cinemap-marker-dim {
