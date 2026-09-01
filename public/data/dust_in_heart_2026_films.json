@@ -12,11 +12,16 @@
       "titleZh": "马布斯博士的一千只眼",
       "titleEn": "Die 1000 Augen des Dr. Mabuse",
       "year": 1960,
-      "countries": ["德国"],
+      "countries": [
+        "德国"
+      ],
       "runtimeMin": 104,
       "director": "弗里茨·朗",
       "section": "尘埃中的心",
-      "posterGradient": ["#1a1a1a", "#6b3a3a"],
+      "posterGradient": [
+        "#1a1a1a",
+        "#6b3a3a"
+      ],
       "screenings": [
         {
           "id": "scr_dust_mabuse_20260905_1930_grand",
@@ -40,18 +45,24 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_mabuse.jpg"
     },
     {
       "id": "film_dust_bleiche_mutter",
       "titleZh": "德国，苍白的母亲",
       "titleEn": "Deutschland bleiche Mutter",
       "year": 1980,
-      "countries": ["德国"],
+      "countries": [
+        "德国"
+      ],
       "runtimeMin": 151,
       "director": "贺玛·桑德斯－勃拉姆斯",
       "section": "尘埃中的心",
-      "posterGradient": ["#2c2418", "#8a7a5c"],
+      "posterGradient": [
+        "#2c2418",
+        "#8a7a5c"
+      ],
       "screenings": [
         {
           "id": "scr_dust_bleiche_20260906_1540_grand",
@@ -75,18 +86,25 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_bleiche_mutter.jpg"
     },
     {
       "id": "film_dust_double_godard_farocki",
       "titleZh": "德国玖零 / 工人离开工厂",
       "titleEn": "Allemagne année 90 neuf zéro / Arbeiter verlassen die Fabrik",
       "year": 1991,
-      "countries": ["法国", "德国"],
+      "countries": [
+        "法国",
+        "德国"
+      ],
       "runtimeMin": 98,
       "director": "让－吕克·戈达尔、哈伦·法罗基",
       "section": "尘埃中的心",
-      "posterGradient": ["#243040", "#8a9aaa"],
+      "posterGradient": [
+        "#243040",
+        "#8a9aaa"
+      ],
       "screenings": [
         {
           "id": "scr_dust_double_gf_20260904_2000_grand",
@@ -97,7 +115,9 @@
           "start": "20:00",
           "end": "21:38",
           "price": 0,
-          "techTags": ["联映"]
+          "techTags": [
+            "联映"
+          ]
         },
         {
           "id": "scr_dust_double_gf_20260913_1330_grand",
@@ -108,20 +128,28 @@
           "start": "13:30",
           "end": "15:08",
           "price": 0,
-          "techTags": ["联映"]
+          "techTags": [
+            "联映"
+          ]
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_double_godard_farocki.jpg"
     },
     {
       "id": "film_dust_antigone",
       "titleZh": "索福克勒斯的安提戈涅",
       "titleEn": "Die Antigone des Sophokles",
       "year": 1992,
-      "countries": ["德国"],
+      "countries": [
+        "德国"
+      ],
       "runtimeMin": 100,
       "director": "让－马里·斯特劳布、达尼埃尔·于伊耶",
       "section": "尘埃中的心",
-      "posterGradient": ["#1e2a1e", "#6a8a5a"],
+      "posterGradient": [
+        "#1e2a1e",
+        "#6a8a5a"
+      ],
       "screenings": [
         {
           "id": "scr_dust_antigone_20260906_1930_grand",
@@ -132,7 +160,9 @@
           "start": "19:30",
           "end": "21:10",
           "price": 0,
-          "techTags": ["35mm"]
+          "techTags": [
+            "35mm"
+          ]
         },
         {
           "id": "scr_dust_antigone_20260912_1600_grand",
@@ -143,20 +173,29 @@
           "start": "16:00",
           "end": "17:40",
           "price": 0,
-          "techTags": ["35mm"]
+          "techTags": [
+            "35mm"
+          ]
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_antigone.jpg"
     },
     {
       "id": "film_dust_othon",
       "titleZh": "眼睛不想一直闭着或者也许有一天轮到罗马自己选择",
       "titleEn": "Les yeux ne veulent pas en tout temps se fermer, ou Peut-être qu'un jour Rome se permettra de choisir à son tour",
       "year": 1970,
-      "countries": ["意大利", "德国"],
+      "countries": [
+        "意大利",
+        "德国"
+      ],
       "runtimeMin": 88,
       "director": "让－马里·斯特劳布、达尼埃尔·于伊耶",
       "section": "尘埃中的心",
-      "posterGradient": ["#2a2030", "#7a6a8a"],
+      "posterGradient": [
+        "#2a2030",
+        "#7a6a8a"
+      ],
       "screenings": [
         {
           "id": "scr_dust_othon_20260905_1530_grand",
@@ -169,18 +208,25 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_othon.jpg"
     },
     {
       "id": "film_dust_nordkalotte",
       "titleZh": "北卡洛特",
       "titleEn": "Die Nordkalotte",
       "year": 1991,
-      "countries": ["瑞典", "德国"],
+      "countries": [
+        "瑞典",
+        "德国"
+      ],
       "runtimeMin": 90,
       "director": "彼得·奈斯勒",
       "section": "尘埃中的心",
-      "posterGradient": ["#1a2830", "#5a7a8a"],
+      "posterGradient": [
+        "#1a2830",
+        "#5a7a8a"
+      ],
       "screenings": [
         {
           "id": "scr_dust_nordkalotte_20260912_1930_grand",
@@ -193,18 +239,24 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_nordkalotte.jpg"
     },
     {
       "id": "film_dust_redupers",
       "titleZh": "全面退化的人格",
       "titleEn": "Die allseitig reduzierte Persönlichkeit - Redupers",
       "year": 1978,
-      "countries": ["德国"],
+      "countries": [
+        "德国"
+      ],
       "runtimeMin": 98,
       "director": "赫尔克·桑德",
       "section": "尘埃中的心",
-      "posterGradient": ["#302018", "#9a7a5a"],
+      "posterGradient": [
+        "#302018",
+        "#9a7a5a"
+      ],
       "screenings": [
         {
           "id": "scr_dust_redupers_20260906_1330_grand",
@@ -215,7 +267,9 @@
           "start": "13:30",
           "end": "15:08",
           "price": 0,
-          "techTags": ["35mm"]
+          "techTags": [
+            "35mm"
+          ]
         },
         {
           "id": "scr_dust_redupers_20260913_1600_grand",
@@ -226,20 +280,28 @@
           "start": "16:00",
           "end": "17:38",
           "price": 0,
-          "techTags": ["35mm"]
+          "techTags": [
+            "35mm"
+          ]
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_redupers.jpg"
     },
     {
       "id": "film_dust_wald",
       "titleZh": "只见树木，不见森林",
       "titleEn": "Der Wald vor lauter Bäumen",
       "year": 2003,
-      "countries": ["德国"],
+      "countries": [
+        "德国"
+      ],
       "runtimeMin": 81,
       "director": "玛伦·阿德",
       "section": "尘埃中的心",
-      "posterGradient": ["#1e2e1a", "#6a8a4a"],
+      "posterGradient": [
+        "#1e2e1a",
+        "#6a8a4a"
+      ],
       "screenings": [
         {
           "id": "scr_dust_wald_20260905_1330_grand",
@@ -263,7 +325,8 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_wald.jpg"
     }
   ]
 }
