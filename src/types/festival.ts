@@ -11,6 +11,10 @@ export type FestivalEntry = {
   poster?: string;
   /** Film catalog JSON under /public, e.g. /data/siff_2026_films.json */
   filmsPath?: string;
+  /** YYYY-MM-DD — used for picker sorting */
+  startDate?: string;
+  /** YYYY-MM-DD */
+  endDate?: string;
 };
 
 export type FestivalsDataset = {

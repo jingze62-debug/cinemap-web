@@ -45,7 +45,8 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_mabuse.jpg"
     },
     {
       "id": "film_dust_bleiche_mutter",
@@ -85,7 +86,8 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_bleiche_mutter.jpg"
     },
     {
       "id": "film_dust_double_godard_farocki",
@@ -175,7 +177,8 @@
             "35mm"
           ]
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_antigone.jpg"
     },
     {
       "id": "film_dust_othon",
@@ -205,7 +208,8 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_othon.jpg"
     },
     {
       "id": "film_dust_nordkalotte",
@@ -235,7 +239,8 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_nordkalotte.jpg"
     },
     {
       "id": "film_dust_redupers",
@@ -279,7 +284,8 @@
             "35mm"
           ]
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_redupers.jpg"
     },
     {
       "id": "film_dust_wald",
@@ -319,7 +325,8 @@
           "price": 0,
           "techTags": []
         }
-      ]
+      ],
+      "poster": "/posters/films/dust_wald.jpg"
     }
   ]
 }

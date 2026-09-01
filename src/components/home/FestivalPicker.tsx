@@ -15,6 +15,30 @@ function shortName(f: FestivalEntry): string {
   return f.title;
 }
 
+/** Days from today to festival window (0 if ongoing). Smaller = closer. */
+function festivalDistanceDays(f: FestivalEntry, today = new Date()): number {
+  const start = f.startDate ? new Date(`${f.startDate}T12:00:00`) : null;
+  const end = f.endDate ? new Date(`${f.endDate}T12:00:00`) : start;
+  if (!start || Number.isNaN(start.getTime())) return Number.POSITIVE_INFINITY;
+  const t = new Date(today);
+  t.setHours(12, 0, 0, 0);
+  const endSafe =
+    end && !Number.isNaN(end.getTime()) ? end : start;
+  if (t >= start && t <= endSafe) return 0;
+  const msDay = 86400000;
+  if (t < start) return (start.getTime() - t.getTime()) / msDay;
+  return (t.getTime() - endSafe.getTime()) / msDay;
+}
+
+function sortFestivalsByProximity(list: FestivalEntry[]): FestivalEntry[] {
+  return [...list].sort((a, b) => {
+    const da = festivalDistanceDays(a);
+    const db = festivalDistanceDays(b);
+    if (da !== db) return da - db;
+    return (a.startDate ?? "").localeCompare(b.startDate ?? "");
+  });
+}
+
 export function FestivalPicker({ onSelect }: FestivalPickerProps) {
   const [festivals, setFestivals] = useState<FestivalEntry[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">(
@@ -47,8 +71,9 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
       })
       .then((data: { festivals: FestivalEntry[] }) => {
         if (cancelled) return;
-        setFestivals(data.festivals);
-        const first = data.festivals.find((f) => f.available);
+        const sorted = sortFestivalsByProximity(data.festivals);
+        setFestivals(sorted);
+        const first = sorted.find((f) => f.available);
         setSelectedId(first?.id ?? null);
         setStatus("ready");
       })
@@ -101,7 +126,7 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
             </div>
             <div className="min-w-0 flex-1 pt-0.5">
               <p className="text-[11px] font-semibold tracking-[0.12em] text-ink/50">
-                <span className="text-accent">{"//"}</span> 启动 · 选择电影节
+                <span className="text-accent">{"//"}</span> 启动 · 选择电影节/展
               </p>
               <h1 className="mt-1.5 font-display text-[1.75rem] font-black leading-[1.15] tracking-tight text-ink sm:text-[1.85rem]">
                 进入<span className="text-accent">影展</span>
@@ -123,7 +148,7 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
           {bootLine >= 1 && (
             <p>
               <span className="font-bold text-signal-dim">ok</span> 检索 → 选择{" "}
-              <span className="font-bold text-accent">电影节</span> → 进入
+              <span className="font-bold text-accent">电影节/展</span> → 进入
             </p>
           )}
           {bootLine >= 2 && (
@@ -136,12 +161,12 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
 
         <div className="cm-frost mt-6 rounded-xl border-2 border-ink/12 p-4">
           <p className="text-[12px] font-semibold text-ink/60">
-            <span className="text-accent">{"//"}</span> 搜索电影节
+            <span className="text-accent">{"//"}</span> 搜索电影节/展
           </p>
 
           <div className="mt-3 flex items-end gap-2">
             <label className="relative min-w-0 flex-1">
-              <span className="sr-only">搜索电影节</span>
+              <span className="sr-only">搜索电影节/展</span>
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -165,12 +190,12 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
         </div>
 
         <p className="mt-6 text-[11px] font-semibold tracking-[0.12em] text-ink/45">
-          <span className="text-accent">{"//"}</span> A 面 · 可选电影节
+          <span className="text-accent">{"//"}</span> A 面 · 可选电影节/展
         </p>
 
         {status === "loading" && (
           <p className="mt-4 animate-pulse font-semibold text-ink/45">
-            正在加载电影节列表…
+            正在加载电影节/展列表…
           </p>
         )}
         {status === "error" && (
