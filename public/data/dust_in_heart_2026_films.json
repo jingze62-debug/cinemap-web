@@ -4,7 +4,7 @@
   "editionLabel": "2026 · 上海日常影展",
   "sections": [
     "全部",
-    "尘埃中的心"
+    "尘埃中的心：德国电影史选映"
   ],
   "films": [
     {
@@ -17,7 +17,7 @@
       ],
       "runtimeMin": 104,
       "director": "弗里茨·朗",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#1a1a1a",
         "#6b3a3a"
@@ -45,8 +45,7 @@
           "price": 0,
           "techTags": []
         }
-      ],
-      "poster": "/posters/films/dust_mabuse.jpg"
+      ]
     },
     {
       "id": "film_dust_bleiche_mutter",
@@ -58,7 +57,7 @@
       ],
       "runtimeMin": 151,
       "director": "贺玛·桑德斯－勃拉姆斯",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#2c2418",
         "#8a7a5c"
@@ -86,8 +85,7 @@
           "price": 0,
           "techTags": []
         }
-      ],
-      "poster": "/posters/films/dust_bleiche_mutter.jpg"
+      ]
     },
     {
       "id": "film_dust_double_godard_farocki",
@@ -100,7 +98,7 @@
       ],
       "runtimeMin": 98,
       "director": "让－吕克·戈达尔、哈伦·法罗基",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#243040",
         "#8a9aaa"
@@ -133,7 +131,7 @@
           ]
         }
       ],
-      "poster": "/posters/films/dust_double_godard_farocki.jpg"
+      "poster": "/posters/films/dust_double_side.jpg"
     },
     {
       "id": "film_dust_antigone",
@@ -145,7 +143,7 @@
       ],
       "runtimeMin": 100,
       "director": "让－马里·斯特劳布、达尼埃尔·于伊耶",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#1e2a1e",
         "#6a8a5a"
@@ -177,8 +175,7 @@
             "35mm"
           ]
         }
-      ],
-      "poster": "/posters/films/dust_antigone.jpg"
+      ]
     },
     {
       "id": "film_dust_othon",
@@ -191,7 +188,7 @@
       ],
       "runtimeMin": 88,
       "director": "让－马里·斯特劳布、达尼埃尔·于伊耶",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#2a2030",
         "#7a6a8a"
@@ -208,8 +205,7 @@
           "price": 0,
           "techTags": []
         }
-      ],
-      "poster": "/posters/films/dust_othon.jpg"
+      ]
     },
     {
       "id": "film_dust_nordkalotte",
@@ -222,7 +218,7 @@
       ],
       "runtimeMin": 90,
       "director": "彼得·奈斯勒",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#1a2830",
         "#5a7a8a"
@@ -239,8 +235,7 @@
           "price": 0,
           "techTags": []
         }
-      ],
-      "poster": "/posters/films/dust_nordkalotte.jpg"
+      ]
     },
     {
       "id": "film_dust_redupers",
@@ -252,7 +247,7 @@
       ],
       "runtimeMin": 98,
       "director": "赫尔克·桑德",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#302018",
         "#9a7a5a"
@@ -284,8 +279,7 @@
             "35mm"
           ]
         }
-      ],
-      "poster": "/posters/films/dust_redupers.jpg"
+      ]
     },
     {
       "id": "film_dust_wald",
@@ -297,7 +291,7 @@
       ],
       "runtimeMin": 81,
       "director": "玛伦·阿德",
-      "section": "尘埃中的心",
+      "section": "尘埃中的心：德国电影史选映",
       "posterGradient": [
         "#1e2e1a",
         "#6a8a4a"
@@ -325,8 +319,7 @@
           "price": 0,
           "techTags": []
         }
-      ],
-      "poster": "/posters/films/dust_wald.jpg"
+      ]
     }
   ]
 }
