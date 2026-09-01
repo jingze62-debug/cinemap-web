@@ -59,6 +59,8 @@ const DAY_END_MAX = 28 * 60; // 04:00 next day
 /** Breathing room after the last screening ends */
 const END_PAD_MIN = 60;
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
+/** Label + grid line every 2 hours (density / pxPerMin unchanged) */
+const GRID_HOUR_STEP = 120;
 
 const ACCENTS = [
   { border: "#e85d33", text: "#c4451a", bg: "rgba(232,93,51,0.11)" },
@@ -212,7 +214,7 @@ export function ScheduleCalendarView({
   const spanMin = gridEnd - gridStart;
   const gridHeight = spanMin * metrics.pxPerMin;
   const hourMarks: number[] = [];
-  for (let m = gridStart; m <= gridEnd; m += 60) hourMarks.push(m);
+  for (let m = gridStart; m <= gridEnd; m += GRID_HOUR_STEP) hourMarks.push(m);
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
