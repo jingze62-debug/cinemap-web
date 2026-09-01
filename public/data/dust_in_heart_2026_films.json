@@ -78,19 +78,19 @@
       ]
     },
     {
-      "id": "film_dust_allemagne_90",
-      "titleZh": "德国玖零",
-      "titleEn": "Allemagne année 90 neuf zéro",
+      "id": "film_dust_double_godard_farocki",
+      "titleZh": "德国玖零 / 工人离开工厂",
+      "titleEn": "Allemagne année 90 neuf zéro / Arbeiter verlassen die Fabrik",
       "year": 1991,
       "countries": ["法国", "德国"],
-      "runtimeMin": 62,
-      "director": "让－吕克·戈达尔",
+      "runtimeMin": 98,
+      "director": "让－吕克·戈达尔、哈伦·法罗基",
       "section": "尘埃中的心",
       "posterGradient": ["#243040", "#8a9aaa"],
       "screenings": [
         {
-          "id": "scr_dust_allemagne_20260904_2000_grand",
-          "filmId": "film_dust_allemagne_90",
+          "id": "scr_dust_double_gf_20260904_2000_grand",
+          "filmId": "film_dust_double_godard_farocki",
           "cinemaId": "cinema_grand",
           "hall": "1号LUXE厅",
           "date": "2026-09-04",
@@ -100,43 +100,8 @@
           "techTags": ["联映"]
         },
         {
-          "id": "scr_dust_allemagne_20260913_1330_grand",
-          "filmId": "film_dust_allemagne_90",
-          "cinemaId": "cinema_grand",
-          "hall": "1号LUXE厅",
-          "date": "2026-09-13",
-          "start": "13:30",
-          "end": "15:08",
-          "price": 0,
-          "techTags": ["联映"]
-        }
-      ]
-    },
-    {
-      "id": "film_dust_arbeiter",
-      "titleZh": "工人离开工厂",
-      "titleEn": "Arbeiter verlassen die Fabrik",
-      "year": 1995,
-      "countries": ["德国"],
-      "runtimeMin": 36,
-      "director": "哈伦·法罗基",
-      "section": "尘埃中的心",
-      "posterGradient": ["#3a3a3a", "#b0b0b0"],
-      "screenings": [
-        {
-          "id": "scr_dust_arbeiter_20260904_2102_grand",
-          "filmId": "film_dust_arbeiter",
-          "cinemaId": "cinema_grand",
-          "hall": "1号LUXE厅",
-          "date": "2026-09-04",
-          "start": "20:00",
-          "end": "21:38",
-          "price": 0,
-          "techTags": ["联映"]
-        },
-        {
-          "id": "scr_dust_arbeiter_20260913_1330_grand",
-          "filmId": "film_dust_arbeiter",
+          "id": "scr_dust_double_gf_20260913_1330_grand",
+          "filmId": "film_dust_double_godard_farocki",
           "cinemaId": "cinema_grand",
           "hall": "1号LUXE厅",
           "date": "2026-09-13",
