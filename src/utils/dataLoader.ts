@@ -1,5 +1,6 @@
 import type { Cinema } from "@/types/cinema";
 import type { Film, FilmsDataset, Screening } from "@/types/film";
+import type { FestivalsDataset } from "@/types/festival";
 
 export type TransitMatrix = Record<string, Record<string, number>>;
 
@@ -36,6 +37,10 @@ export function filmsPathForFestival(festivalId?: string, filmsPath?: string) {
   return "/data/siff_2026_films.json";
 }
 
+export function loadFestivals(): Promise<FestivalsDataset> {
+  return fetchJson<FestivalsDataset>("/data/festivals.json");
+}
+
 export function loadFilms(
   festivalId?: string,
   filmsPath?: string
@@ -45,6 +50,50 @@ export function loadFilms(
     ...ds,
     films: dedupeFilms(ds.films),
   }));
+}
+
+/** Union of films across every available festival — for city map / check-in. */
+export async function loadAllFestivalFilms(): Promise<Film[]> {
+  const { festivals } = await loadFestivals();
+  const available = festivals.filter((f) => f.available);
+  const datasets = await Promise.all(
+    available.map((f) => loadFilms(f.id, f.filmsPath))
+  );
+  const byId = new Map<string, Film>();
+  for (const ds of datasets) {
+    for (const film of ds.films) {
+      const prev = byId.get(film.id);
+      if (!prev) {
+        byId.set(film.id, film);
+        continue;
+      }
+      // Merge screenings when same film id appears in multiple festivals
+      const seen = new Set(prev.screenings.map((s) => s.id));
+      const extra = film.screenings.filter((s) => !seen.has(s.id));
+      if (extra.length > 0) {
+        byId.set(film.id, {
+          ...prev,
+          screenings: [...prev.screenings, ...extra],
+        });
+      }
+    }
+  }
+  return Array.from(byId.values());
+}
+
+/** Cinemas that appear in any festival schedule, with aggregated stats. */
+export async function loadCityMapCinemas(): Promise<Cinema[]> {
+  const [cinemas, films] = await Promise.all([
+    loadCinemas(),
+    loadAllFestivalFilms(),
+  ]);
+  const used = new Set<string>();
+  for (const film of films) {
+    for (const s of film.screenings) used.add(s.cinemaId);
+  }
+  const scoped =
+    used.size > 0 ? cinemas.filter((c) => used.has(c.id)) : cinemas;
+  return enrichCinemaStats(scoped.length > 0 ? scoped : cinemas, films);
 }
 
 /** Prefer cleaner titles when Excel import produced duplicate film ids.

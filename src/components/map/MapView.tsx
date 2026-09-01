@@ -6,7 +6,7 @@ import { Sparkles } from "lucide-react";
 import { VenueDrawer } from "@/components/map/VenueDrawer";
 import { CheckInModal } from "@/components/map/CheckInModal";
 import { useDragScroll } from "@/hooks/useDragScroll";
-import { useFestivalData } from "@/hooks/useFestivalData";
+import { useCityMapCinemas } from "@/hooks/useCityMapCinemas";
 import { useCheckInStore } from "@/hooks/useCheckInStore";
 import { cn } from "@/lib/utils";
 import type { Cinema } from "@/types/cinema";
@@ -84,7 +84,7 @@ function CinemaListItems({
 }
 
 export function MapView() {
-  const festival = useFestivalData();
+  const mapData = useCityMapCinemas();
   const isCheckedIn = useCheckInStore((s) => s.isCheckedIn);
   const checkIn = useCheckInStore((s) => s.checkIn);
   const checkOut = useCheckInStore((s) => s.checkOut);
@@ -120,12 +120,10 @@ export function MapView() {
     );
   };
 
-  const cinemas = useMemo(() => {
-    if (festival.status !== "ready") return [];
-    return [...festival.data.cinemas].sort(
-      (a, b) => b.screeningCount - a.screeningCount
-    );
-  }, [festival]);
+  const cinemas = useMemo(
+    () => (mapData.status === "ready" ? mapData.cinemas : []),
+    [mapData]
+  );
 
   const selected = useMemo(
     () => cinemas.find((c) => c.id === selectedId) ?? null,
@@ -179,7 +177,7 @@ export function MapView() {
     setFocusId(id);
   };
 
-  if (festival.status === "loading") {
+  if (mapData.status === "loading") {
     return (
       <div className="flex h-full min-h-[70vh] items-center justify-center bg-paper text-sm text-ink/40">
         正在加载影院数据…
@@ -187,10 +185,10 @@ export function MapView() {
     );
   }
 
-  if (festival.status === "error") {
+  if (mapData.status === "error") {
     return (
       <div className="flex h-full min-h-[70vh] items-center justify-center bg-paper text-sm text-accent">
-        {festival.message}
+        {mapData.message}
       </div>
     );
   }
@@ -209,7 +207,7 @@ export function MapView() {
             打卡<span className="bg-accent px-1.5 text-white">点亮</span>城市
           </h1>
           <p className="mt-1 font-mono text-[10px] font-bold tracking-wide text-ink/45">
-            {cinemas.length} 家展映影院 · 打卡{" "}
+            全影展 {cinemas.length} 家影院 · 打卡{" "}
             <span className="text-accent">{litCount}</span> 家
           </p>
         </div>
