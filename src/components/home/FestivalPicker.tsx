@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { FestivalEntry } from "@/types/festival";
-import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "@/components/shell/ThemeSwitcher";
 
 type FestivalPickerProps = {
@@ -213,7 +212,6 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
               {filtered
                 .filter((f) => f.available)
                 .map((f, i) => {
-                  const active = selectedId === f.id;
                   const label = shortName(f);
                   const idx = String(i + 1).padStart(2, "0");
                   const poster = f.poster ?? `/posters/${f.id}.svg`;
@@ -226,19 +224,9 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
                           setSelectedId(f.id);
                           onSelect(f);
                         }}
-                        className={cn(
-                          "group flex w-full items-stretch gap-3 rounded-lg border-2 p-2.5 text-left transition-colors",
-                          active
-                            ? "border-accent bg-accent/[0.12] text-ink backdrop-blur-md"
-                            : "cm-frost-card border-ink/10 text-ink/75 hover:border-ink/25 hover:text-ink"
-                        )}
+                        className="group cm-frost-card flex w-full items-stretch gap-3 rounded-lg border-2 border-ink/10 p-2.5 text-left text-ink/75 transition-colors hover:border-ink/25 hover:text-ink"
                       >
-                        <div
-                          className={cn(
-                            "relative h-[5.5rem] w-[4.1rem] shrink-0 overflow-hidden rounded-md border bg-chassis",
-                            active ? "border-accent/50" : "border-ink/12"
-                          )}
-                        >
+                        <div className="relative h-[5.5rem] w-[4.1rem] shrink-0 overflow-hidden rounded-md border border-ink/12 bg-chassis">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={poster}
@@ -250,19 +238,9 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
                         <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                           <div>
                             <p className="font-mono text-[12px] font-bold">
-                              <span
-                                className={cn(
-                                  active ? "text-accent" : "text-ink/30"
-                                )}
-                              >
-                                {active ? ">" : idx}
-                              </span>
+                              <span className="text-ink/30">{idx}</span>
                               <span className="mx-1.5 text-ink/20">·</span>
-                              <span
-                                className={cn(active && "text-signal-dim")}
-                              >
-                                {f.id}
-                              </span>
+                              <span>{f.id}</span>
                             </p>
                             <p className="mt-1 truncate font-display text-[16px] font-black leading-tight">
                               {label}
@@ -272,14 +250,7 @@ export function FestivalPicker({ onSelect }: FestivalPickerProps) {
                               {f.editionLabel ? ` · ${f.editionLabel}` : ""}
                             </p>
                           </div>
-                          <span
-                            className={cn(
-                              "self-end font-mono text-[11px] font-bold tracking-wider",
-                              active
-                                ? "text-accent"
-                                : "text-ink/30 group-hover:text-ink/60"
-                            )}
-                          >
+                          <span className="self-end font-mono text-[11px] font-bold tracking-wider text-ink/30 group-hover:text-ink/60">
                             进入
                           </span>
                         </div>
