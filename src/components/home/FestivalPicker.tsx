@@ -11,6 +11,7 @@ type FestivalPickerProps = {
 
 function shortName(f: FestivalEntry): string {
   if (f.art === "siff") return "上海国际电影节";
+  if (f.id === "dust_in_heart_2026") return "尘埃中的心";
   return f.title;
 }
 

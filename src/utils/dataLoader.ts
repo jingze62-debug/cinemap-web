@@ -30,8 +30,18 @@ async function fetchJson<T>(url: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export function loadFilms(): Promise<FilmsDataset> {
-  return fetchJson<FilmsDataset>("/data/siff_2026_films.json").then((ds) => ({
+export function filmsPathForFestival(festivalId?: string, filmsPath?: string) {
+  if (filmsPath) return filmsPath;
+  if (festivalId) return `/data/${festivalId}_films.json`;
+  return "/data/siff_2026_films.json";
+}
+
+export function loadFilms(
+  festivalId?: string,
+  filmsPath?: string
+): Promise<FilmsDataset> {
+  const url = filmsPathForFestival(festivalId, filmsPath);
+  return fetchJson<FilmsDataset>(url).then((ds) => ({
     ...ds,
     films: dedupeFilms(ds.films),
   }));

@@ -241,9 +241,15 @@ export function FilmCard({
                       {s.hall ? ` · ${s.hall}` : ""}
                     </p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                      <span className="font-mono text-[13px] font-black text-accent">
-                        ¥{s.price}
-                      </span>
+                      {s.price > 0 ? (
+                        <span className="font-mono text-[13px] font-black text-accent">
+                          ¥{s.price}
+                        </span>
+                      ) : (
+                        <span className="font-mono text-[11px] font-bold text-ink/40">
+                          票价以现场为准
+                        </span>
+                      )}
                       {(s.techTags ?? []).map((tag) => (
                         <span
                           key={tag}

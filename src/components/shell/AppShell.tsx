@@ -12,6 +12,7 @@ import { AppErrorBoundary } from "@/components/shell/AppErrorBoundary";
 import type { FestivalEntry } from "@/types/festival";
 import { track } from "@/lib/analytics";
 import { ensureFestivalData } from "@/hooks/useFestivalData";
+import { filmsPathForFestival } from "@/utils/dataLoader";
 import { cn } from "@/lib/utils";
 
 const loadingPane = (
@@ -44,8 +45,6 @@ export function AppShell() {
 
   useEffect(() => {
     track("app_open");
-    // Prefetch films while user is still on the festival picker
-    ensureFestivalData();
   }, []);
 
   // Restore last festival after mount — never block first paint
@@ -55,6 +54,10 @@ export function AppShell() {
       if (!raw) return;
       const parsed = JSON.parse(raw) as FestivalEntry;
       if (parsed?.id && parsed.available) {
+        ensureFestivalData(
+          parsed.id,
+          filmsPathForFestival(parsed.id, parsed.filmsPath)
+        );
         setFestival(parsed);
         track("festival_enter", {
           festivalId: parsed.id,
@@ -67,6 +70,7 @@ export function AppShell() {
   }, []);
 
   const enterFestival = (f: FestivalEntry) => {
+    ensureFestivalData(f.id, filmsPathForFestival(f.id, f.filmsPath));
     setFestival(f);
     setTab("catalog");
     track("festival_enter", { festivalId: f.id, source: "picker" });

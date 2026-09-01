@@ -216,9 +216,15 @@ const SessionRow = memo(function SessionRow({
         </p>
 
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="font-mono text-[13px] font-black text-accent">
-            ¥{screening.price}
-          </span>
+          {screening.price > 0 ? (
+            <span className="font-mono text-[13px] font-black text-accent">
+              ¥{screening.price}
+            </span>
+          ) : (
+            <span className="font-mono text-[11px] font-bold text-ink/40">
+              票价以现场为准
+            </span>
+          )}
           {(screening.techTags ?? []).slice(0, 3).map((t) => (
             <span
               key={t}

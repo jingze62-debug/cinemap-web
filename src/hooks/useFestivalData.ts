@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import type { Cinema } from "@/types/cinema";
 import type { Film, FilmsDataset, Screening } from "@/types/film";
 import {
   enrichCinemaStats,
+  filmsPathForFestival,
   indexCinemas,
   indexFilms,
   indexScreenings,
@@ -29,6 +30,7 @@ export type FestivalData = {
   cinemasById: Map<string, Cinema>;
   /** False until transit matrices finish (schedule/map still usable with defaults). */
   transitReady: boolean;
+  festivalId: string;
 };
 
 type State =
@@ -38,12 +40,14 @@ type State =
 
 type Store = {
   state: State;
-  started: boolean;
+  loadedKey: string | null;
+  loadToken: number;
 };
 
 const store: Store = {
   state: { status: "loading" },
-  started: false,
+  loadedKey: null,
+  loadToken: 0,
 };
 
 const listeners = new Set<() => void>();
@@ -57,10 +61,30 @@ function setState(next: State) {
   emit();
 }
 
-async function loadCore(): Promise<void> {
-  const [dataset, cinemas] = await Promise.all([loadFilms(), loadCinemas()]);
+function cinemaScope(all: Cinema[], films: Film[]): Cinema[] {
+  const used = new Set<string>();
+  for (const film of films) {
+    for (const s of film.screenings) used.add(s.cinemaId);
+  }
+  if (used.size === 0) return all;
+  const scoped = all.filter((c) => used.has(c.id));
+  return scoped.length > 0 ? scoped : all;
+}
+
+async function loadCore(
+  festivalId: string,
+  filmsPath: string,
+  token: number
+): Promise<void> {
+  const [dataset, cinemas] = await Promise.all([
+    loadFilms(festivalId, filmsPath),
+    loadCinemas(),
+  ]);
+  if (token !== store.loadToken) return;
+
   const films = [...dataset.films].sort(compareFilmsByTitle);
-  const enriched = enrichCinemaStats(cinemas, films);
+  const scoped = cinemaScope(cinemas, films);
+  const enriched = enrichCinemaStats(scoped, films);
   setState({
     status: "ready",
     data: {
@@ -73,21 +97,24 @@ async function loadCore(): Promise<void> {
       filmsById: indexFilms(films),
       cinemasById: indexCinemas(enriched),
       transitReady: false,
+      festivalId,
     },
   });
+  store.loadedKey = `${festivalId}::${filmsPath}`;
 }
 
-async function loadTransit(): Promise<void> {
+async function loadTransit(token: number): Promise<void> {
   const [matrix, travelModes] = await Promise.all([
     loadTransitMatrix(),
     loadTravelModes(),
   ]);
-  const cur = store.state;
-  if (cur.status !== "ready") return;
+  if (token !== store.loadToken) return;
+  const current = store.state;
+  if (current.status !== "ready") return;
   setState({
     status: "ready",
     data: {
-      ...cur.data,
+      ...current.data,
       matrix,
       travelModes,
       transitReady: true,
@@ -95,17 +122,29 @@ async function loadTransit(): Promise<void> {
   });
 }
 
-/** Kick off once; catalog becomes ready before transit matrices. */
-export function ensureFestivalData(): void {
-  if (store.started) return;
-  store.started = true;
+/**
+ * Load (or switch) festival catalog. Re-fetches when festival/path changes.
+ */
+export function ensureFestivalData(
+  festivalId = "siff_2026",
+  filmsPath?: string
+) {
+  const path = filmsPathForFestival(festivalId, filmsPath);
+  const key = `${festivalId}::${path}`;
+  if (store.loadedKey === key && store.state.status === "ready") return;
+
+  const token = ++store.loadToken;
+  store.loadedKey = null;
+  setState({ status: "loading" });
+
   void (async () => {
     try {
-      await loadCore();
-      void loadTransit().catch(() => {
+      await loadCore(festivalId, path, token);
+      void loadTransit(token).catch(() => {
         /* catalog works without transit */
       });
     } catch (e) {
+      if (token !== store.loadToken) return;
       setState({
         status: "error",
         message: e instanceof Error ? e.message : "数据加载失败",
@@ -126,13 +165,10 @@ function getSnapshot(): State {
 }
 
 /**
- * Shared festival dataset — loads once per page session.
+ * Shared festival dataset — loads once per festival selection.
  * Films/cinemas first; transit matrices fill in afterwards.
  */
 export function useFestivalData(): State {
-  useEffect(() => {
-    ensureFestivalData();
-  }, []);
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
