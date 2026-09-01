@@ -4,7 +4,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CineMap · 影展排片与影院地图",
-  description: "Local-first film festival scheduler and cinema map",
+  description:
+    "Local-first 上影节排片助手：选片、挑场次、日程表导出、影院地图打卡点亮。",
+  applicationName: "CineMap",
+  appleWebApp: { capable: true, title: "CineMap" },
 };
 
 export const viewport: Viewport = {

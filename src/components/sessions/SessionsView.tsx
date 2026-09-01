@@ -731,15 +731,6 @@ export function SessionsView() {
             </div>
           )}
         </ScrollHideChrome>
-        {filtersHidden && (
-          <button
-            type="button"
-            onClick={showFilters}
-            className="mx-3 mb-1 shrink-0 rounded-md border border-ink/10 bg-panel-raised/70 px-2.5 py-1 font-mono text-[10px] font-bold text-ink/45 transition hover:border-accent/35 hover:text-accent lg:hidden"
-          >
-            <span className="text-accent">{"//"}</span> 筛选 · 展开
-          </button>
-        )}
 
         <div
           ref={dragRef}

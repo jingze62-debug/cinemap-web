@@ -141,6 +141,8 @@ export function MapView() {
   );
 
   const litCount = checkedInIds.size;
+  const checkInPct =
+    cinemas.length > 0 ? Math.round((litCount / cinemas.length) * 100) : 0;
 
   const checkInCinema = useMemo(() => {
     const id = checkInTargetId ?? selectedId;
@@ -207,27 +209,25 @@ export function MapView() {
             打卡<span className="bg-accent px-1.5 text-white">点亮</span>城市
           </h1>
           <p className="mt-1 font-mono text-[10px] font-bold tracking-wide text-ink/45">
-            {cinemas.length} 家展映影院 · 你已点亮{" "}
+            {cinemas.length} 家展映影院 · 打卡{" "}
             <span className="text-accent">{litCount}</span> 家
           </p>
         </div>
       </div>
       {cinemas.length > 0 && (
-        <div className="cm-frost overflow-hidden rounded-lg border border-ink/10 px-3 py-2">
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-ink/40">
-              点亮进度
-            </p>
-            <p className="font-mono text-[10px] font-bold text-ink/55">
-              {litCount}/{cinemas.length}
-            </p>
+        <div className="cm-frost overflow-hidden rounded-lg border border-ink/10 px-2.5 py-2 lg:px-3 lg:py-2.5">
+          <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-ink/40">
+            <span className="text-accent">{"//"}</span> 打卡统计
+          </p>
+          <div className="mt-1.5 grid grid-cols-3 gap-1.5 text-center lg:gap-2">
+            <MapStat value={litCount} label="打卡数" highlight />
+            <MapStat value={cinemas.length} label="总影院" />
+            <MapStat value={`${checkInPct}%`} label="完成度" />
           </div>
-          <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-ink/8">
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-ink/8">
             <div
               className="h-full rounded-full bg-gradient-to-r from-accent to-accent-soft transition-[width] duration-500 ease-out"
-              style={{
-                width: `${cinemas.length ? (litCount / cinemas.length) * 100 : 0}%`,
-              }}
+              style={{ width: `${checkInPct}%` }}
             />
           </div>
         </div>
@@ -238,10 +238,17 @@ export function MapView() {
   const mapStage = (
     <div className="cm-map-gate relative min-h-0 flex-1 overflow-hidden rounded-2xl border border-ink/14 bg-map-bg/30 shadow-[0_10px_36px_color-mix(in_srgb,var(--ink)_12%,transparent)] ring-1 ring-inset ring-white/25">
       {/* Mobile floating list — keep compact so map stays visible */}
+      <div className="cm-frost absolute right-2 top-2 z-[400] rounded-md border border-ink/12 px-2 py-1 shadow-md shadow-ink/10 lg:hidden">
+        <p className="font-mono text-[9px] font-bold tabular-nums text-ink/55">
+          打卡{" "}
+          <span className="text-accent">{litCount}</span>
+          <span className="text-ink/35">/{cinemas.length}</span>
+        </p>
+      </div>
       <div className="cm-frost absolute left-2 top-2 z-[400] flex max-h-[min(34vh,12.5rem)] w-[9.75rem] flex-col overflow-hidden rounded-lg border border-ink/12 shadow-md shadow-ink/10 lg:hidden">
         <div className="h-0.5 w-full shrink-0 cm-hazard" aria-hidden />
         <p className="shrink-0 border-b border-ink/10 px-1.5 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-ink/40">
-          <span className="text-accent">{"//"}</span> Sorted · Scroll
+          <span className="text-accent">{"//"}</span> 影院 · {litCount} 已打卡
         </p>
         <div
           ref={listDragRef}
@@ -353,6 +360,32 @@ export function MapView() {
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">{mapStage}</div>
+    </div>
+  );
+}
+
+function MapStat({
+  value,
+  label,
+  highlight,
+}: {
+  value: number | string;
+  label: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="rounded-md border border-ink/8 bg-paper/50 px-1 py-1.5 lg:px-1.5 lg:py-2">
+      <p
+        className={cn(
+          "font-display text-base font-black tabular-nums leading-none lg:text-lg",
+          highlight ? "text-accent" : "text-ink"
+        )}
+      >
+        {value}
+      </p>
+      <p className="mt-1 font-mono text-[8px] font-bold uppercase tracking-[0.1em] text-ink/40 lg:text-[9px]">
+        {label}
+      </p>
     </div>
   );
 }

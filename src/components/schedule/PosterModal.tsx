@@ -42,15 +42,17 @@ type PosterModalProps = {
 
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
 
-/** Match ScheduleCalendarView proportions for the exported grid */
-const PX_PER_MIN = 1.15;
-const COL_WIDTH = 168;
-const GUTTER_WIDTH = 40;
-const HEADER_HEIGHT = 36;
+/** Export calendar: wide day columns + short time rows → horizontal 2h cells */
+const PX_PER_MIN = 0.44;
+const COL_WIDTH = 128;
+const GUTTER_WIDTH = 28;
+const HEADER_HEIGHT = 24;
 const DAY_START = 8 * 60;
 const DAY_END_DEFAULT = 24 * 60;
 const DAY_END_MAX = 28 * 60;
 const END_PAD_MIN = 45;
+/** Export calendar grid: label + line every 2 hours */
+const GRID_HOUR_STEP = 120;
 
 const ACCENTS = [
   { border: "#e85d33", text: "#c4451a", bg: "rgba(232,93,51,0.11)" },
@@ -75,7 +77,7 @@ function screeningEndMin(s: Screening): number {
 
 function formatDateHeader(date: string) {
   const d = new Date(`${date}T12:00:00`);
-  return `${d.getMonth() + 1}/${d.getDate()} 周${WEEKDAYS[d.getDay()]}`;
+  return `${d.getMonth() + 1}/${d.getDate()} ${WEEKDAYS[d.getDay()]}`;
 }
 
 function formatHourLabel(totalMin: number): string {
@@ -107,9 +109,27 @@ function yPos(minOfDay: number, gridStart: number) {
   return (minOfDay - gridStart) * PX_PER_MIN;
 }
 
-/** Fixed preview viewport — both styles share the same compact box */
+/** Preview fills leftover modal space. touch-none: pan via useDragScroll(includeTouch). */
 const PREVIEW_VIEWPORT =
-  "h-[min(58dvh,640px)] w-full touch-none select-none overflow-auto rounded-xl border border-ink/8 bg-paper/30 scrollbar-none";
+  "h-full min-h-[12rem] w-full touch-none select-none overflow-auto overscroll-contain rounded-lg border scrollbar-none [-webkit-overflow-scrolling:touch] lg:min-h-[min(52vh,520px)]";
+
+const PREVIEW_ZOOM_MIN = 0.45;
+const PREVIEW_ZOOM_MAX = 2.8;
+const PREVIEW_ZOOM_STEP = 0.15;
+/** Calendar preview: 60% mobile, 90% desktop (lg). */
+const CALENDAR_DEFAULT_ZOOM_MOBILE = 0.6;
+const CALENDAR_DEFAULT_ZOOM_DESKTOP = 0.9;
+
+function calendarDefaultZoom(): number {
+  if (typeof window === "undefined") return CALENDAR_DEFAULT_ZOOM_MOBILE;
+  return window.matchMedia("(min-width: 1024px)").matches
+    ? CALENDAR_DEFAULT_ZOOM_DESKTOP
+    : CALENDAR_DEFAULT_ZOOM_MOBILE;
+}
+
+function clampZoom(n: number) {
+  return Math.min(PREVIEW_ZOOM_MAX, Math.max(PREVIEW_ZOOM_MIN, n));
+}
 
 function ListPoster({
   planName,
@@ -124,7 +144,7 @@ function ListPoster({
 }) {
   return (
     <div
-      className="min-h-full w-full rounded-xl border px-3.5 py-4"
+      className="min-h-full w-full min-w-[21rem] max-w-[26rem] rounded-xl border px-5 py-5"
       style={{
         background: theme.surface,
         borderColor: theme.border,
@@ -132,49 +152,53 @@ function ListPoster({
       }}
     >
       <div
-        className="border-b border-dashed pb-3"
+        className="border-b border-dashed pb-3.5"
         style={{ borderColor: theme.dashed }}
       >
         <p
-          className="font-mono text-[9px] font-bold uppercase tracking-[0.18em]"
+          className="font-mono text-[9px] font-bold uppercase tracking-[0.16em]"
           style={{ color: theme.inkFaint }}
         >
           CineMap · Schedule
         </p>
-        <p className="mt-1 font-display text-lg font-black tracking-tight">
+        <p className="mt-1 font-display text-xl font-black leading-tight tracking-tight">
           {planName}
         </p>
         <p
-          className="mt-1 font-mono text-[11px]"
+          className="mt-1.5 font-mono text-[11px] leading-relaxed"
           style={{ color: theme.inkMuted }}
         >
           {items.length} 场 · ¥{totalPrice} · 按时间顺序
         </p>
       </div>
-      <ul className="mt-3 space-y-0">
+      <ul className="mt-3">
         {items.map(({ screening: s, film, cinema }, i) => (
           <li
             key={s.id}
-            className={cn("flex gap-3 py-2.5", i > 0 && "border-t")}
+            className={cn("flex gap-4 py-3.5", i > 0 && "border-t")}
             style={i > 0 ? { borderColor: theme.borderLight } : undefined}
           >
             <div
-              className="w-[4.5rem] shrink-0 font-mono text-[11px] leading-snug"
+              className="w-[5.25rem] shrink-0 font-mono text-[11px] leading-relaxed"
               style={{ color: theme.inkMuted }}
             >
-              <p className="font-bold" style={{ color: theme.ink }}>
+              <p className="text-[13px] font-bold leading-none" style={{ color: theme.ink }}>
                 {s.date.slice(5).replace("-", "/")}
               </p>
-              <p>
+              <p className="mt-1.5 whitespace-nowrap">
                 {s.start}
-                <span style={{ color: theme.inkFaint }}>–</span>
+                <span className="px-0.5" style={{ color: theme.inkFaint }}>
+                  –
+                </span>
                 {s.end}
               </p>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[13px] font-bold leading-snug">{film.titleZh}</p>
+              <p className="text-[15px] font-bold leading-snug tracking-tight">
+                {film.titleZh}
+              </p>
               <p
-                className="mt-0.5 truncate font-mono text-[10px]"
+                className="mt-1.5 break-words font-mono text-[10px] leading-relaxed"
                 style={{ color: theme.inkMuted }}
               >
                 {cinema?.nameZh ?? s.cinemaId}
@@ -194,7 +218,7 @@ function ListPoster({
         )}
       </ul>
       <p
-        className="mt-3 border-t border-dashed pt-2 font-mono text-[9px]"
+        className="mt-4 border-t border-dashed pt-2.5 font-mono text-[9px]"
         style={{ borderColor: theme.dashed, color: theme.inkFaint }}
       >
         Generated locally · CineMap
@@ -261,7 +285,7 @@ function CalendarPoster({
 
   const hourMarks = useMemo(() => {
     const marks: number[] = [];
-    for (let m = gridStart; m <= gridEnd; m += 60) marks.push(m);
+    for (let m = gridStart; m <= gridEnd; m += GRID_HOUR_STEP) marks.push(m);
     return marks;
   }, [gridStart, gridEnd]);
 
@@ -269,7 +293,7 @@ function CalendarPoster({
 
   return (
     <div
-      className="min-h-full w-fit rounded-xl border"
+      className="min-h-full w-fit rounded-lg border"
       style={{
         background: theme.surface,
         borderColor: theme.border,
@@ -277,20 +301,20 @@ function CalendarPoster({
       }}
     >
       <div
-        className="border-b border-dashed px-3.5 py-3"
+        className="border-b border-dashed px-2.5 py-2"
         style={{ borderColor: theme.dashed }}
       >
         <p
-          className="font-mono text-[9px] font-bold uppercase tracking-[0.18em]"
+          className="font-mono text-[8px] font-bold uppercase tracking-[0.16em]"
           style={{ color: theme.inkFaint }}
         >
           CineMap · Calendar
         </p>
-        <p className="mt-1 font-display text-lg font-black tracking-tight">
+        <p className="mt-0.5 font-display text-base font-black tracking-tight">
           {planName}
         </p>
         <p
-          className="mt-1 font-mono text-[11px]"
+          className="mt-0.5 font-mono text-[10px]"
           style={{ color: theme.inkMuted }}
         >
           {items.length} 场 · {dates.length} 天 · ¥{totalPrice}
@@ -299,15 +323,15 @@ function CalendarPoster({
 
       {dates.length === 0 ? (
         <p
-          className="px-3.5 py-8 text-center font-mono text-xs"
+          className="px-2.5 py-6 text-center font-mono text-xs"
           style={{ color: theme.inkFaint }}
         >
           暂无场次
         </p>
       ) : (
-        <div className="overflow-hidden px-2 pb-2 pt-2">
+        <div className="overflow-hidden px-1.5 pb-1.5 pt-1.5">
           <div
-            className="relative rounded-lg border"
+            className="relative rounded-md border"
             style={{
               width: GUTTER_WIDTH + dates.length * COL_WIDTH,
               height: HEADER_HEIGHT + gridHeight,
@@ -327,7 +351,7 @@ function CalendarPoster({
               {dates.map((date) => (
                 <div
                   key={date}
-                  className="flex shrink-0 items-center justify-center border-r font-mono text-[11px] font-semibold"
+                  className="flex shrink-0 items-center justify-center border-r font-mono text-[9px] font-semibold"
                   style={{
                     width: COL_WIDTH,
                     borderColor: theme.borderLight,
@@ -356,20 +380,20 @@ function CalendarPoster({
                 return (
                   <span
                     key={m}
-                    className="absolute right-1.5 font-mono text-[9px] font-medium leading-none"
+                    className="absolute right-1 font-mono text-[8px] font-medium leading-none"
                     style={{
                       top: HEADER_HEIGHT + yPos(m, gridStart),
                       color: nextDay ? theme.overnight : theme.inkFaint,
                       transform: isFirst
-                        ? "translateY(3px)"
+                        ? "translateY(2px)"
                         : isLast
-                          ? "translateY(calc(-100% - 2px))"
+                          ? "translateY(calc(-100% - 1px))"
                           : "translateY(-50%)",
                     }}
                   >
                     {formatHourLabel(m)}
                     {nextDay ? (
-                      <span className="ml-0.5 text-[7px] opacity-80">+1</span>
+                      <span className="ml-0.5 text-[6px] opacity-80">+1</span>
                     ) : null}
                   </span>
                 );
@@ -413,7 +437,7 @@ function CalendarPoster({
                         const start = timeToMinutes(s.start);
                         const end = screeningEndMin(s);
                         const top = yPos(start, gridStart);
-                        const height = Math.max((end - start) * PX_PER_MIN, 48);
+                        const height = Math.max((end - start) * PX_PER_MIN, 28);
                         const film = filmsById.get(s.filmId);
                         const cinema = cinemasById.get(s.cinemaId);
                         const accent = accentFor(s.filmId);
@@ -424,33 +448,33 @@ function CalendarPoster({
                         return (
                           <article
                             key={s.id}
-                            className="absolute left-1.5 right-1.5 z-[1] overflow-hidden rounded-lg border"
+                            className="absolute left-1 right-1 z-[1] overflow-hidden rounded-md border"
                             style={{
                               top,
                               height,
                               background: accent.bg,
                               borderColor: theme.borderLight,
-                              borderLeftWidth: 3,
+                              borderLeftWidth: 2,
                               borderLeftColor: accent.border,
                             }}
                           >
-                            <div className="flex h-full min-h-0 flex-col gap-0.5 p-1.5">
+                            <div className="flex h-full min-h-0 flex-col gap-0.5 p-1">
                               <h3
-                                className="line-clamp-2 text-[11px] font-bold leading-snug"
+                                className="line-clamp-2 text-[9px] font-bold leading-snug"
                                 style={{ color: accent.text }}
                               >
                                 {film?.titleZh ?? s.filmId}
                                 {titleExtra}
                               </h3>
                               <p
-                                className="font-mono text-[9px] font-medium"
+                                className="font-mono text-[8px] font-medium"
                                 style={{ color: theme.inkMuted }}
                               >
                                 {s.start}-{s.end}
                               </p>
-                              {height >= 64 && (
+                              {height >= 52 && (
                                 <p
-                                  className="truncate text-[9px] leading-snug"
+                                  className="truncate text-[8px] leading-snug"
                                   style={{ color: theme.inkFaint }}
                                 >
                                   {cinema?.nameZh ?? s.cinemaId}
@@ -477,10 +501,10 @@ function CalendarPoster({
                           return (
                             <div
                               key={`gap-${s.id}-${next.id}`}
-                              className="pointer-events-none absolute inset-x-0 z-[5] flex justify-end px-2"
+                              className="pointer-events-none absolute inset-x-0 z-[5] flex justify-end px-1"
                               style={{
                                 top: seamY,
-                                transform: "translateY(calc(-100% - 3px))",
+                                transform: "translateY(calc(-100% - 2px))",
                               }}
                             >
                               <OverlapConflictBadge overlapMin={overlapMin} />
@@ -509,7 +533,7 @@ function CalendarPoster({
                               className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 border-l border-dashed"
                               style={{ borderColor: theme.border }}
                             />
-                            <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center px-1">
+                            <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center px-0.5">
                               <TransitBadge gap={gap} compact />
                             </div>
                           </div>
@@ -525,7 +549,7 @@ function CalendarPoster({
       )}
 
       <p
-        className="border-t border-dashed px-3.5 py-2 font-mono text-[9px]"
+        className="border-t border-dashed px-2.5 py-1.5 font-mono text-[8px]"
         style={{ borderColor: theme.dashed, color: theme.inkFaint }}
       >
         Generated locally · CineMap
@@ -546,16 +570,24 @@ export function PosterModal({
 }: PosterModalProps) {
   const receiptRef = useRef<HTMLDivElement>(null);
   const previewElRef = useRef<HTMLDivElement | null>(null);
+  const zoomRef = useRef(1);
+  const pinchRef = useRef<{
+    startDist: number;
+    startZoom: number;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [layout, setLayout] = useState<PosterLayout>("calendar");
   const [themeId, setThemeId] = useState<PosterThemeId>("cream");
+  const [zoom, setZoom] = useState(1);
+  const [contentSize, setContentSize] = useState({ w: 0, h: 0 });
   const theme = posterThemeById(themeId);
+  const panAxis = layout === "calendar" ? "both" : "y";
   const {
     ref: bindPreviewDrag,
     dragging,
     suppressClickIfDragged,
-  } = useDragScroll("both", { target: "self" });
+  } = useDragScroll(panAxis, { target: "self", includeTouch: true });
   const previewScrollRef = useCallback(
     (node: HTMLDivElement | null) => {
       previewElRef.current = node;
@@ -564,12 +596,74 @@ export function PosterModal({
     [bindPreviewDrag]
   );
 
+  const applyZoom = useCallback((next: number) => {
+    const z = clampZoom(next);
+    zoomRef.current = z;
+    setZoom(z);
+  }, []);
+
+  const userZoomedRef = useRef(false);
+
+  const resetCalendarZoom = useCallback(() => {
+    applyZoom(calendarDefaultZoom());
+    const viewport = previewElRef.current;
+    if (viewport) {
+      viewport.scrollLeft = 0;
+      viewport.scrollTop = 0;
+    }
+  }, [applyZoom]);
+
+  useEffect(() => {
+    if (!open) return;
+    userZoomedRef.current = false;
+    if (layout === "list") applyZoom(1);
+    else applyZoom(calendarDefaultZoom());
+  }, [open, layout, themeId, applyZoom]);
+
+  useEffect(() => {
+    if (!open) return;
+    const el = receiptRef.current;
+    if (!el) return;
+    const measure = () => {
+      setContentSize({ w: el.offsetWidth, h: el.offsetHeight });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open, layout, themeId, items, planName, totalPrice]);
+
+  useEffect(() => {
+    if (!open || userZoomedRef.current) return;
+    if (layout === "list") {
+      applyZoom(1);
+      return;
+    }
+    resetCalendarZoom();
+  }, [open, layout, themeId, contentSize, applyZoom, resetCalendarZoom]);
+
+  const bumpZoom = useCallback(
+    (next: number) => {
+      userZoomedRef.current = true;
+      applyZoom(next);
+    },
+    [applyZoom]
+  );
+
   useEffect(() => {
     const el = previewElRef.current;
     if (!el || !open) return;
 
     const onWheel = (e: WheelEvent) => {
-      const canX = el.scrollWidth > el.clientWidth;
+      if (layout === "calendar" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        userZoomedRef.current = true;
+        const delta =
+          e.deltaY > 0 ? -PREVIEW_ZOOM_STEP / 2 : PREVIEW_ZOOM_STEP / 2;
+        applyZoom(zoomRef.current + delta);
+        return;
+      }
+      const canX = layout === "calendar" && el.scrollWidth > el.clientWidth;
       const canY = el.scrollHeight > el.clientHeight;
       if (!canX && !canY) return;
       if (e.deltaX === 0 && e.deltaY === 0) return;
@@ -581,9 +675,53 @@ export function PosterModal({
       }
     };
 
+    const touchDist = (touches: TouchList) => {
+      if (touches.length < 2) return 0;
+      const a = touches[0];
+      const b = touches[1];
+      return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (layout !== "calendar" || e.touches.length !== 2) {
+        pinchRef.current = null;
+        return;
+      }
+      pinchRef.current = {
+        startDist: touchDist(e.touches),
+        startZoom: zoomRef.current,
+      };
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (layout !== "calendar") return;
+      if (e.touches.length !== 2 || !pinchRef.current) return;
+      e.preventDefault();
+      userZoomedRef.current = true;
+      const dist = touchDist(e.touches);
+      if (pinchRef.current.startDist <= 0) return;
+      applyZoom(
+        pinchRef.current.startZoom * (dist / pinchRef.current.startDist)
+      );
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) pinchRef.current = null;
+    };
+
     el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, [open]);
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+    el.addEventListener("touchcancel", onTouchEnd);
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [open, applyZoom, layout]);
 
   if (!open) return null;
 
@@ -609,116 +747,147 @@ export function PosterModal({
     }
   };
 
+  const effectiveZoom = layout === "list" ? 1 : zoom;
+  const scaledW =
+    contentSize.w > 0
+      ? contentSize.w * effectiveZoom
+      : layout === "list"
+        ? "100%"
+        : "fit-content";
+  const scaledH =
+    contentSize.h > 0 ? contentSize.h * effectiveZoom : undefined;
+
   return (
-    <div className="fixed inset-0 z-[700] flex items-end justify-center bg-ink/40 p-3 sm:items-center sm:p-4">
-      <div className="cm-frost max-h-[92dvh] w-full max-w-[min(92vw,28rem)] overflow-y-auto rounded-2xl border border-ink/12 p-4 shadow-xl">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-ink/40">
-              <span className="text-accent">{"//"}</span> Export · Image
-            </p>
-            <h3 className="mt-1 font-display text-lg font-black tracking-tight">
-              导出排片表
-            </h3>
+    <div className="fixed inset-0 z-[700] flex items-end justify-center bg-ink/40 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:items-center sm:p-4 lg:p-6">
+      <div className="cm-frost flex max-h-[min(94dvh,100%)] w-full max-w-[min(96vw,28rem)] flex-col overflow-hidden rounded-2xl border border-ink/12 shadow-xl sm:max-h-[min(92dvh,820px)] lg:max-h-[min(90dvh,880px)] lg:max-w-[min(92vw,56rem)] lg:rounded-3xl">
+        <div className="shrink-0 space-y-2 px-3 pt-3 lg:space-y-3 lg:px-5 lg:pt-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink/40 lg:text-[10px]">
+                <span className="text-accent">{"//"}</span> Export
+              </p>
+              <h3 className="font-display text-base font-black tracking-tight lg:text-xl">
+                导出排片表
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-ink/10 text-ink/40 hover:bg-ink/5"
+              aria-label="关闭"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md border border-ink/10 p-1.5 text-ink/40 hover:bg-ink/5"
-            aria-label="关闭"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
 
-        <div
-          className="mt-3 grid grid-cols-2 gap-1.5"
-          role="radiogroup"
-          aria-label="排片表版式"
-        >
-          <button
-            type="button"
-            role="radio"
-            aria-checked={layout === "calendar"}
-            onClick={() => setLayout("calendar")}
-            className={cn(
-              "flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
-              layout === "calendar"
-                ? "border-accent bg-accent/10 text-accent"
-                : "border-ink/12 bg-paper/50 text-ink/60 hover:border-ink/25"
-            )}
-          >
-            <CalendarDays className="h-4 w-4 shrink-0" />
-            <span className="min-w-0">
-              <span className="block font-mono text-[11px] font-bold">
-                日历式
-              </span>
-              <span className="block font-mono text-[9px] opacity-70">
-                时间轴网格
-              </span>
-            </span>
-          </button>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={layout === "list"}
-            onClick={() => setLayout("list")}
-            className={cn(
-              "flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
-              layout === "list"
-                ? "border-accent bg-accent/10 text-accent"
-                : "border-ink/12 bg-paper/50 text-ink/60 hover:border-ink/25"
-            )}
-          >
-            <ListOrdered className="h-4 w-4 shrink-0" />
-            <span className="min-w-0">
-              <span className="block font-mono text-[11px] font-bold">
-                时间列表
-              </span>
-              <span className="block font-mono text-[9px] opacity-70">
-                从上到下
-              </span>
-            </span>
-          </button>
-        </div>
-
-        <div className="mt-3">
-          <p className="mb-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-ink/45">
-            导出样式
-          </p>
           <div
-            className="grid grid-cols-3 gap-1.5 sm:grid-cols-5"
+            className="grid grid-cols-2 gap-1"
             role="radiogroup"
-            aria-label="导出样式"
+            aria-label="排片表版式"
           >
-            {POSTER_THEMES.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                role="radio"
-                aria-checked={themeId === t.id}
-                onClick={() => setThemeId(t.id)}
-                className={cn(
-                  "flex flex-col items-center gap-1 rounded-lg border px-1.5 py-2 transition-colors",
-                  themeId === t.id
-                    ? "border-accent bg-accent/10"
-                    : "border-ink/12 bg-paper/50 hover:border-ink/25"
-                )}
-              >
-                <span
-                  className="h-5 w-full rounded border"
-                  style={{ background: t.swatch, borderColor: t.swatchBorder }}
-                  aria-hidden
-                />
-                <span className="font-mono text-[9px] font-bold leading-tight text-ink/70">
-                  {t.label}
-                </span>
-              </button>
-            ))}
+            <button
+              type="button"
+              role="radio"
+              aria-checked={layout === "calendar"}
+              onClick={() => setLayout("calendar")}
+              className={cn(
+                "flex h-9 items-center justify-center gap-1.5 rounded-md border px-2 font-mono text-[11px] font-bold transition-colors",
+                layout === "calendar"
+                  ? "border-accent bg-accent/10 text-accent"
+                  : "border-ink/12 bg-paper/50 text-ink/60 hover:border-ink/25"
+              )}
+            >
+              <CalendarDays className="h-3.5 w-3.5 shrink-0" />
+              日历式
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={layout === "list"}
+              onClick={() => setLayout("list")}
+              className={cn(
+                "flex h-9 items-center justify-center gap-1.5 rounded-md border px-2 font-mono text-[11px] font-bold transition-colors",
+                layout === "list"
+                  ? "border-accent bg-accent/10 text-accent"
+                  : "border-ink/12 bg-paper/50 text-ink/60 hover:border-ink/25"
+              )}
+            >
+              <ListOrdered className="h-3.5 w-3.5 shrink-0" />
+              时间列表
+            </button>
+          </div>
+
+          <div className="flex items-end gap-1">
+            <div
+              className="grid min-w-0 flex-1 grid-cols-5 gap-1"
+              role="radiogroup"
+              aria-label="导出样式"
+            >
+              {POSTER_THEMES.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={themeId === t.id}
+                  title={t.label}
+                  onClick={() => setThemeId(t.id)}
+                  className={cn(
+                    "flex h-9 flex-col items-center justify-center gap-0.5 rounded-md border px-0.5 transition-colors",
+                    themeId === t.id
+                      ? "border-accent bg-accent/10"
+                      : "border-ink/12 bg-paper/50 hover:border-ink/25"
+                  )}
+                >
+                  <span
+                    className="h-3.5 w-full max-w-[2rem] rounded-sm border"
+                    style={{
+                      background: t.swatch,
+                      borderColor: t.swatchBorder,
+                    }}
+                    aria-hidden
+                  />
+                  <span className="max-w-full truncate font-mono text-[8px] font-bold leading-none text-ink/65">
+                    {t.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {layout === "calendar" ? (
+              <div className="flex shrink-0 items-center gap-1 pb-0.5">
+                <button
+                  type="button"
+                  className="inline-flex h-8 min-w-8 items-center justify-center rounded-md border border-ink/12 font-mono text-sm text-ink/70 hover:bg-ink/5"
+                  aria-label="缩小"
+                  onClick={() => bumpZoom(zoomRef.current - PREVIEW_ZOOM_STEP)}
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex h-8 min-w-[2.75rem] items-center justify-center rounded-md border border-ink/12 font-mono text-[10px] font-bold text-ink/60 hover:bg-ink/5"
+                  aria-label="重置缩放"
+                  onClick={() => {
+                    userZoomedRef.current = false;
+                    resetCalendarZoom();
+                  }}
+                >
+                  {Math.round(effectiveZoom * 100)}%
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex h-8 min-w-8 items-center justify-center rounded-md border border-ink/12 font-mono text-sm text-ink/70 hover:bg-ink/5"
+                  aria-label="放大"
+                  onClick={() => bumpZoom(zoomRef.current + PREVIEW_ZOOM_STEP)}
+                >
+                  +
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
 
-        <div className="mt-4 space-y-3">
+        <div className="min-h-0 flex-1 px-3 pt-1.5 lg:px-5 lg:pt-2">
           <div
             ref={previewScrollRef}
             onClickCapture={suppressClickIfDragged}
@@ -726,41 +895,68 @@ export function PosterModal({
               PREVIEW_VIEWPORT,
               dragging ? "cursor-grabbing" : "cursor-grab"
             )}
+            style={{
+              background: theme.bg,
+              borderColor: theme.border,
+            }}
           >
             <div
-              ref={receiptRef}
-              className={cn(
-                "mx-auto",
-                layout === "calendar" ? "min-w-fit w-fit" : "w-full"
-              )}
+              style={{
+                width: scaledW,
+                height: scaledH && scaledH > 0 ? scaledH : "auto",
+                minHeight: scaledH && scaledH > 0 ? scaledH : undefined,
+              }}
             >
-              {layout === "calendar" ? (
-                <CalendarPoster
-                  planName={planName}
-                  items={items}
-                  totalPrice={totalPrice}
-                  cinemasById={cinemasById}
-                  matrix={matrix}
-                  travelModes={travelModes}
-                  theme={theme}
-                />
-              ) : (
-                <ListPoster
-                  planName={planName}
-                  items={items}
-                  totalPrice={totalPrice}
-                  theme={theme}
-                />
-              )}
+              <div
+                style={{
+                  transform: `scale(${effectiveZoom})`,
+                  transformOrigin: "top left",
+                  width:
+                    contentSize.w > 0
+                      ? contentSize.w
+                      : layout === "list"
+                        ? "100%"
+                        : "fit-content",
+                }}
+              >
+                <div
+                  ref={receiptRef}
+                  className={cn(
+                    layout === "calendar" ? "min-w-fit w-fit" : "w-full"
+                  )}
+                >
+                  {layout === "calendar" ? (
+                    <CalendarPoster
+                      planName={planName}
+                      items={items}
+                      totalPrice={totalPrice}
+                      cinemasById={cinemasById}
+                      matrix={matrix}
+                      travelModes={travelModes}
+                      theme={theme}
+                    />
+                  ) : (
+                    <ListPoster
+                      planName={planName}
+                      items={items}
+                      totalPrice={totalPrice}
+                      theme={theme}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          {error && <p className="font-mono text-xs text-accent">{error}</p>}
-
+        <div className="shrink-0 border-t border-ink/8 bg-paper/80 px-3 py-2 backdrop-blur-sm lg:px-5 lg:py-3">
+          {error && (
+            <p className="mb-1.5 font-mono text-xs text-accent">{error}</p>
+          )}
           <Button
             type="button"
             variant="accent"
-            className="w-full font-mono text-xs uppercase tracking-wider"
+            className="h-10 w-full font-mono text-xs uppercase tracking-wider lg:h-11 lg:text-sm"
             disabled={busy || items.length === 0}
             onClick={exportPng}
           >

@@ -362,7 +362,6 @@ export function VenueDrawer({
         className="cm-frost absolute inset-x-0 bottom-0 z-[500] flex max-h-[min(62%,calc(100%-0.5rem))] flex-col overflow-hidden rounded-t-2xl border-t border-ink/15 text-ink shadow-[0_-12px_40px_rgba(26,26,26,0.12)] will-change-transform"
         role="dialog"
         aria-label={`${cinema.nameZh} 详情`}
-        aria-expanded={snap === "open"}
         aria-hidden={snap === "hidden" && dockReady}
       >
         <div

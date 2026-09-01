@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
-import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Minus, Plus, Trash2 } from "lucide-react";
 import type { Cinema } from "@/types/cinema";
 import type { Film, Screening } from "@/types/film";
 import {
@@ -12,13 +12,44 @@ import {
 } from "@/utils/transitEngine";
 import type { TransitMatrix, TravelModesMatrix } from "@/utils/dataLoader";
 import { TransitBadge, OverlapConflictBadge } from "@/components/schedule/TransitBadge";
+import { useDragScroll } from "@/hooks/useDragScroll";
 import { cn } from "@/lib/utils";
 
-/** ~1 hour ≈ 72px */
-const PX_PER_MIN = 1.2;
-const COL_WIDTH = 176;
-const GUTTER_WIDTH = 44;
-const HEADER_HEIGHT = 40;
+/** Calendar grid layout (zoom applied via CSS transform) */
+const METRICS = {
+  pxPerMin: 1.2,
+  colWidth: 176,
+  gutterWidth: 44,
+  headerHeight: 40,
+  minCardHeight: 52,
+} as const;
+
+const CALENDAR_ZOOM_MIN = 0.35;
+const CALENDAR_ZOOM_MAX = 2.4;
+const CALENDAR_ZOOM_STEP = 0.1;
+const CALENDAR_DEFAULT_ZOOM_MOBILE = 0.6;
+const CALENDAR_DEFAULT_ZOOM_DESKTOP = 0.9;
+
+function calendarDefaultZoom(): number {
+  if (typeof window === "undefined") return CALENDAR_DEFAULT_ZOOM_MOBILE;
+  return window.matchMedia("(min-width: 1024px)").matches
+    ? CALENDAR_DEFAULT_ZOOM_DESKTOP
+    : CALENDAR_DEFAULT_ZOOM_MOBILE;
+}
+
+function useIsMobileCalendar() {
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const apply = () => setMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  return mobile;
+}
 /** Festival days usually start mid-morning */
 const DAY_START = 8 * 60;
 /** Default end at midnight so 20:40→23:xx films aren't clipped */
@@ -93,8 +124,8 @@ function dateRangeInclusive(keys: string[]): string[] {
   return out;
 }
 
-function yPos(minOfDay: number, gridStart: number) {
-  return (minOfDay - gridStart) * PX_PER_MIN;
+function yPos(minOfDay: number, gridStart: number, pxPerMin: number) {
+  return (minOfDay - gridStart) * pxPerMin;
 }
 
 function overlappingIdsForDay(dayScreenings: Screening[]): Set<string> {
@@ -115,7 +146,37 @@ export function ScheduleCalendarView({
   onRemove,
   highlightId = null,
 }: ScheduleCalendarViewProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobileCalendar();
+  const metrics = METRICS;
+  const scrollElRef = useRef<HTMLDivElement | null>(null);
+  const zoomRef = useRef(CALENDAR_DEFAULT_ZOOM_MOBILE);
+  const pinchRef = useRef<{ startDist: number; startZoom: number } | null>(null);
+  const [zoom, setZoom] = useState(CALENDAR_DEFAULT_ZOOM_MOBILE);
+
+  const applyZoom = useCallback((next: number) => {
+    const z = Math.min(CALENDAR_ZOOM_MAX, Math.max(CALENDAR_ZOOM_MIN, next));
+    zoomRef.current = z;
+    setZoom(z);
+  }, []);
+
+  const resetDefaultZoom = useCallback(() => {
+    applyZoom(calendarDefaultZoom());
+    scrollElRef.current?.scrollTo(0, 0);
+  }, [applyZoom]);
+
+  const {
+    ref: bindDrag,
+    dragging,
+    suppressClickIfDragged,
+  } = useDragScroll("both", { target: "self", includeTouch: isMobile });
+
+  const setScrollRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      scrollElRef.current = node;
+      bindDrag(node);
+    },
+    [bindDrag]
+  );
   const sorted = useMemo(() => sortScreenings(screenings), [screenings]);
 
   const byDate = useMemo(() => {
@@ -149,7 +210,7 @@ export function ScheduleCalendarView({
   }, [sorted]);
 
   const spanMin = gridEnd - gridStart;
-  const gridHeight = spanMin * PX_PER_MIN;
+  const gridHeight = spanMin * metrics.pxPerMin;
   const hourMarks: number[] = [];
   for (let m = gridStart; m <= gridEnd; m += 60) hourMarks.push(m);
 
@@ -158,38 +219,28 @@ export function ScheduleCalendarView({
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [canScrollUp, setCanScrollUp] = useState(false);
   const [canScrollDown, setCanScrollDown] = useState(false);
-  const [dragging, setDragging] = useState(false);
   const [focusedOverlapId, setFocusedOverlapId] = useState<string | null>(null);
-  const dragRef = useRef<{
-    active: boolean;
-    startX: number;
-    startY: number;
-    startScrollX: number;
-    startScrollY: number;
-    moved: boolean;
-  }>({
-    active: false,
-    startX: 0,
-    startY: 0,
-    startScrollX: 0,
-    startScrollY: 0,
-    moved: false,
-  });
+
+  const contentW = metrics.gutterWidth + dates.length * metrics.colWidth;
+  const contentH = metrics.headerHeight + gridHeight;
+  const scaledW = contentW * zoom;
+  const scaledH = contentH * zoom;
+  const colStep = metrics.colWidth * zoom;
 
   const updateScrollHints = () => {
-    const el = scrollRef.current;
+    const el = scrollElRef.current;
     if (!el) return;
     setCanScrollLeft(el.scrollLeft > 4);
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
     setCanScrollUp(el.scrollTop > 4);
     setCanScrollDown(el.scrollTop + el.clientHeight < el.scrollHeight - 4);
-    const idx = Math.round(el.scrollLeft / COL_WIDTH);
+    const idx = Math.round(el.scrollLeft / colStep);
     setActiveIdx(Math.max(0, Math.min(dates.length - 1, idx)));
   };
 
   useEffect(() => {
     updateScrollHints();
-    const el = scrollRef.current;
+    const el = scrollElRef.current;
     if (!el) return;
     el.addEventListener("scroll", updateScrollHints, { passive: true });
     const ro = new ResizeObserver(updateScrollHints);
@@ -199,7 +250,11 @@ export function ScheduleCalendarView({
       ro.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dates.length, gridHeight]);
+  }, [dates.length, gridHeight, colStep]);
+
+  useEffect(() => {
+    resetDefaultZoom();
+  }, [isMobile, dates.length, gridHeight, resetDefaultZoom]);
 
   useEffect(() => {
     if (
@@ -210,54 +265,19 @@ export function ScheduleCalendarView({
     }
   }, [sorted, focusedOverlapId]);
 
-  /** Click-drag / touch to pan in any direction (scrollbar stays hidden). */
+  /** Trackpad wheel pan (desktop); pinch zoom (mobile). */
   useEffect(() => {
-    const el = scrollRef.current;
+    const el = scrollElRef.current;
     if (!el) return;
 
-    const onPointerDown = (e: PointerEvent) => {
-      // Only primary button / touch; ignore interactive controls
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      const target = e.target as HTMLElement | null;
-      if (target?.closest("button, a, input, textarea, [data-overlap-card]"))
-        return;
-
-      dragRef.current = {
-        active: true,
-        startX: e.clientX,
-        startY: e.clientY,
-        startScrollX: el.scrollLeft,
-        startScrollY: el.scrollTop,
-        moved: false,
-      };
-      setDragging(true);
-      el.setPointerCapture(e.pointerId);
-    };
-
-    const onPointerMove = (e: PointerEvent) => {
-      const d = dragRef.current;
-      if (!d.active) return;
-      const dx = e.clientX - d.startX;
-      const dy = e.clientY - d.startY;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) d.moved = true;
-      el.scrollLeft = d.startScrollX - dx;
-      el.scrollTop = d.startScrollY - dy;
-    };
-
-    const onPointerUp = (e: PointerEvent) => {
-      const d = dragRef.current;
-      if (!d.active) return;
-      d.active = false;
-      setDragging(false);
-      try {
-        el.releasePointerCapture(e.pointerId);
-      } catch {
-        /* already released */
-      }
-    };
-
-    /** Trackpad / mouse wheel → free 2D pan inside the calendar viewport */
     const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        const delta =
+          e.deltaY > 0 ? -CALENDAR_ZOOM_STEP / 2 : CALENDAR_ZOOM_STEP / 2;
+        applyZoom(zoomRef.current + delta);
+        return;
+      }
       const canX = el.scrollWidth > el.clientWidth;
       const canY = el.scrollHeight > el.clientHeight;
       if (!canX && !canY) return;
@@ -265,40 +285,62 @@ export function ScheduleCalendarView({
       e.preventDefault();
       if (canX) el.scrollLeft += e.deltaX;
       if (canY) el.scrollTop += e.deltaY;
-      // Shift+wheel / vertical-only trackpads: map leftover vertical to X when needed
       if (canX && !canY && e.deltaX === 0 && e.deltaY !== 0) {
         el.scrollLeft += e.deltaY;
       }
     };
 
-    el.addEventListener("pointerdown", onPointerDown);
-    el.addEventListener("pointermove", onPointerMove);
-    el.addEventListener("pointerup", onPointerUp);
-    el.addEventListener("pointercancel", onPointerUp);
-    el.addEventListener("wheel", onWheel, { passive: false });
-
-    return () => {
-      el.removeEventListener("pointerdown", onPointerDown);
-      el.removeEventListener("pointermove", onPointerMove);
-      el.removeEventListener("pointerup", onPointerUp);
-      el.removeEventListener("pointercancel", onPointerUp);
-      el.removeEventListener("wheel", onWheel);
+    const touchDist = (touches: TouchList) => {
+      if (touches.length < 2) return 0;
+      const a = touches[0];
+      const b = touches[1];
+      return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
     };
-  }, [dates.length]);
 
-  /** Suppress click on cards after a drag pan */
-  const suppressClickIfDragged = (e: MouseEvent) => {
-    if (dragRef.current.moved) {
+    const onTouchStart = (e: TouchEvent) => {
+      if (!isMobile || e.touches.length !== 2) {
+        pinchRef.current = null;
+        return;
+      }
+      pinchRef.current = {
+        startDist: touchDist(e.touches),
+        startZoom: zoomRef.current,
+      };
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isMobile) return;
+      if (e.touches.length !== 2 || !pinchRef.current) return;
       e.preventDefault();
-      e.stopPropagation();
-      dragRef.current.moved = false;
-    }
-  };
+      const dist = touchDist(e.touches);
+      if (pinchRef.current.startDist <= 0) return;
+      applyZoom(
+        pinchRef.current.startZoom * (dist / pinchRef.current.startDist)
+      );
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) pinchRef.current = null;
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+    el.addEventListener("touchcancel", onTouchEnd);
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [isMobile, applyZoom, dates.length]);
 
   const scrollToDateIndex = (idx: number) => {
-    const el = scrollRef.current;
+    const el = scrollElRef.current;
     if (!el) return;
-    el.scrollTo({ left: idx * COL_WIDTH, behavior: "smooth" });
+    el.scrollTo({ left: idx * colStep, behavior: "smooth" });
   };
 
   if (sorted.length === 0) {
@@ -310,40 +352,66 @@ export function ScheduleCalendarView({
   }
 
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-2 lg:space-y-2.5">
       <div className="flex items-center justify-between gap-2 px-0.5">
-        <p className="font-mono text-[11px] font-bold text-ink/50">
+        <p className="font-mono text-[10px] font-bold text-ink/50 lg:text-[11px]">
           <span className="text-accent">{"//"}</span> {sorted.length} 场 ·{" "}
           {dates.length} 天
         </p>
-        {dates.length > 1 && (
-          <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1">
+          <div
+            className="flex items-center gap-0.5 rounded border border-ink/10 cm-frost-soft px-0.5 lg:px-1"
+            aria-label="日程表缩放"
+          >
             <button
               type="button"
-              aria-label="上一天"
-              disabled={!canScrollLeft}
-              onClick={() => scrollToDateIndex(Math.max(0, activeIdx - 1))}
-              className="rounded border border-ink/12 cm-frost-soft p-1 text-ink/50 disabled:opacity-30"
+              aria-label="缩小"
+              onClick={() => applyZoom(zoomRef.current - CALENDAR_ZOOM_STEP)}
+              className="rounded p-0.5 text-ink/45 hover:text-accent lg:p-1"
             >
-              <ChevronLeft className="h-3.5 w-3.5" />
+              <Minus className="h-3 w-3 lg:h-3.5 lg:w-3.5" />
             </button>
+            <span className="min-w-[2.25rem] text-center font-mono text-[9px] font-bold tabular-nums text-ink/50 lg:text-[10px]">
+              {Math.round(zoom * 100)}%
+            </span>
             <button
               type="button"
-              aria-label="下一天"
-              disabled={!canScrollRight}
-              onClick={() =>
-                scrollToDateIndex(Math.min(dates.length - 1, activeIdx + 1))
-              }
-              className="rounded border border-ink/12 cm-frost-soft p-1 text-ink/50 disabled:opacity-30"
+              aria-label="放大"
+              onClick={() => applyZoom(zoomRef.current + CALENDAR_ZOOM_STEP)}
+              className="rounded p-0.5 text-ink/45 hover:text-accent lg:p-1"
             >
-              <ChevronRight className="h-3.5 w-3.5" />
+              <Plus className="h-3 w-3 lg:h-3.5 lg:w-3.5" />
             </button>
           </div>
-        )}
+          {dates.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-label="上一天"
+                  disabled={!canScrollLeft}
+                  onClick={() => scrollToDateIndex(Math.max(0, activeIdx - 1))}
+                  className="rounded border border-ink/12 cm-frost-soft p-1 text-ink/50 disabled:opacity-30"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="下一天"
+                  disabled={!canScrollRight}
+                  onClick={() =>
+                    scrollToDateIndex(Math.min(dates.length - 1, activeIdx + 1))
+                  }
+                  className="rounded border border-ink/12 cm-frost-soft p-1 text-ink/50 disabled:opacity-30"
+                >
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              </>
+            )}
+        </div>
       </div>
 
       {/* Film-gate calendar — slightly brighter than map, still translucent */}
-      <div className="cm-cal-gate cm-frost relative overflow-hidden rounded-2xl border border-ink/12 shadow-[0_10px_36px_color-mix(in_srgb,var(--ink)_10%,transparent)]">
+      <div className="cm-cal-gate cm-frost relative overflow-hidden rounded-xl border border-ink/12 shadow-[0_10px_36px_color-mix(in_srgb,var(--ink)_10%,transparent)] lg:rounded-2xl">
         {canScrollLeft && (
           <div className="pointer-events-none absolute inset-y-0 left-0 z-40 w-7 rounded-l-2xl bg-gradient-to-r from-panel-raised/75 via-panel-raised/30 to-transparent" />
         )}
@@ -358,30 +426,36 @@ export function ScheduleCalendarView({
         )}
 
         <div
-          ref={scrollRef}
+          ref={setScrollRef}
           onClickCapture={suppressClickIfDragged}
           className={cn(
             "relative touch-none overflow-auto overscroll-contain scrollbar-none select-none",
-            "h-[min(58dvh,calc(100dvh-17.5rem))] lg:h-full lg:min-h-[20rem]",
+            "h-[min(58dvh,calc(100dvh-11.5rem))] lg:h-full lg:min-h-[20rem]",
             dragging ? "cursor-grabbing" : "cursor-grab"
           )}
         >
           <div
             className="relative"
-            style={{
-              width: GUTTER_WIDTH + dates.length * COL_WIDTH,
-              height: HEADER_HEIGHT + gridHeight,
-            }}
+            style={{ width: scaledW, height: scaledH }}
           >
             <div
+              className="relative"
+              style={{
+                transform: `scale(${zoom})`,
+                transformOrigin: "top left",
+                width: contentW,
+                height: contentH,
+              }}
+            >
+            <div
               className="sticky top-0 z-30 flex border-b cm-cal-line bg-panel-raised/78 backdrop-blur-xl"
-              style={{ height: HEADER_HEIGHT, paddingLeft: GUTTER_WIDTH }}
+              style={{ height: metrics.headerHeight, paddingLeft: metrics.gutterWidth }}
             >
               {dates.map((date) => (
                 <div
                   key={date}
-                  className="flex shrink-0 items-center justify-center border-r cm-cal-line font-mono text-[12px] font-semibold text-ink/55"
-                  style={{ width: COL_WIDTH }}
+                  className="flex shrink-0 items-center justify-center border-r cm-cal-line font-mono text-[11px] font-semibold text-ink/55 lg:text-[12px]"
+                  style={{ width: metrics.colWidth }}
                 >
                   {formatDateHeader(date)}
                 </div>
@@ -391,7 +465,7 @@ export function ScheduleCalendarView({
             <div className="relative flex" style={{ height: gridHeight }}>
               <div
                 className="sticky left-0 z-20 shrink-0 border-r cm-cal-line bg-panel-raised/70 backdrop-blur-lg"
-                style={{ width: GUTTER_WIDTH, height: gridHeight }}
+                style={{ width: metrics.gutterWidth, height: gridHeight }}
               >
                 {hourMarks.map((m) => {
                   const isFirst = m === gridStart;
@@ -401,11 +475,11 @@ export function ScheduleCalendarView({
                     <span
                       key={m}
                       className={cn(
-                        "absolute right-1.5 font-mono text-[10px] font-medium leading-none",
+                        "absolute right-1.5 font-mono text-[9px] font-medium leading-none lg:text-[10px]",
                         nextDay ? "text-accent/70" : "text-ink/40"
                       )}
                       style={{
-                        top: yPos(m, gridStart),
+                        top: yPos(m, gridStart, metrics.pxPerMin),
                         // Keep first/last labels inside the gate (avoid header clip)
                         transform: isFirst
                           ? "translateY(3px)"
@@ -431,21 +505,24 @@ export function ScheduleCalendarView({
                   <div
                     key={date}
                     className="relative shrink-0 border-r cm-cal-line bg-panel-raised/35"
-                    style={{ width: COL_WIDTH, height: gridHeight }}
+                    style={{ width: metrics.colWidth, height: gridHeight }}
                   >
                     {hourMarks.map((m) => (
                       <div
                         key={m}
                         className="pointer-events-none absolute inset-x-0 border-t cm-cal-line"
-                        style={{ top: yPos(m, gridStart) }}
+                        style={{ top: yPos(m, gridStart, metrics.pxPerMin) }}
                       />
                     ))}
 
                     {dayScreenings.map((s) => {
                       const start = timeToMinutes(s.start);
                       const end = screeningEndMin(s);
-                      const top = yPos(start, gridStart);
-                      const height = Math.max((end - start) * PX_PER_MIN, 52);
+                      const top = yPos(start, gridStart, metrics.pxPerMin);
+                      const height = Math.max(
+                        (end - start) * metrics.pxPerMin,
+                        metrics.minCardHeight
+                      );
                       const film = filmsById.get(s.filmId);
                       const cinema = cinemasById.get(s.cinemaId);
                       const accent = accentFor(s.filmId);
@@ -539,7 +616,7 @@ export function ScheduleCalendarView({
 
                       if (gapMin <= 0) {
                         const overlapMin = Math.abs(gapMin);
-                        const seamY = yPos(startB, gridStart);
+                        const seamY = yPos(startB, gridStart, metrics.pxPerMin);
                         return (
                           <div
                             key={`gap-${s.id}-${next.id}`}
@@ -554,8 +631,8 @@ export function ScheduleCalendarView({
                         );
                       }
 
-                      const gapTop = yPos(endA, gridStart);
-                      const gapBottom = yPos(startB, gridStart);
+                      const gapTop = yPos(endA, gridStart, metrics.pxPerMin);
+                      const gapBottom = yPos(startB, gridStart, metrics.pxPerMin);
                       const gapH = Math.max(gapBottom - gapTop, 1);
                       const gap = computeGap(
                         s,
@@ -583,6 +660,7 @@ export function ScheduleCalendarView({
               })}
             </div>
           </div>
+        </div>
         </div>
 
         {/* Soft paper bleed — same language as map gate */}

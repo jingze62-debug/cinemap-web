@@ -1,6 +1,7 @@
 "use client";
 
-import { Heart, Search, RotateCcw } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, Heart, Search, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FilterSelect } from "@/components/ui/FilterSelect";
 
@@ -70,6 +71,10 @@ export function CatalogSearchPanel({
     values.director !== "全部",
     Boolean(values.query.trim()),
   ].filter(Boolean).length;
+
+  const dropdownActiveCount = activeCount - (values.query.trim() ? 1 : 0);
+
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const clearAll = () =>
     onChange({
@@ -159,42 +164,84 @@ export function CatalogSearchPanel({
           />
         </label>
 
-        <div className="grid grid-cols-2 gap-x-1.5 gap-y-1.5 pt-0.5 lg:gap-x-2 lg:gap-y-2.5">
-          <FilterSelect
-            field="Date"
-            label="全部日期"
-            value={values.date}
-            options={dateOptions}
-            onChange={(date) => onChange({ date })}
-            compact
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((v) => !v)}
+          aria-expanded={filtersOpen}
+          className={cn(
+            "inline-flex w-full items-center justify-between gap-2 rounded-md border px-2 py-1.5 font-mono text-[10px] font-bold transition-colors lg:px-2.5 lg:py-2 lg:text-[11px]",
+            filtersOpen || dropdownActiveCount > 0
+              ? "border-accent/40 bg-accent/10 text-accent"
+              : "border-ink/12 bg-paper/50 text-ink/55 hover:border-ink/25"
+          )}
+        >
+          <span className="inline-flex items-center gap-1">
+            <span className="text-accent/80">{"//"}</span>
+            筛选
+            {dropdownActiveCount > 0 ? (
+              <span className="text-accent/70">· {dropdownActiveCount}</span>
+            ) : null}
+          </span>
+          <ChevronDown
+            className={cn(
+              "h-3.5 w-3.5 shrink-0 transition-transform duration-300 ease-out lg:h-4 lg:w-4",
+              filtersOpen && "rotate-180"
+            )}
           />
-          <FilterSelect
-            field="Cinema"
-            label="全部影院"
-            value={values.cinemaId}
-            options={cinemaOptions}
-            onChange={(cinemaId) => onChange({ cinemaId })}
-            expand="end"
-            compact
-          />
-          <FilterSelect
-            field="Section"
-            label="全部单元"
-            value={values.section}
-            options={sectionOptions}
-            onChange={(section) => onChange({ section })}
-            compact
-          />
-          <FilterSelect
-            field="Director"
-            label="全部导演"
-            value={values.director}
-            options={directorOptions}
-            onChange={(director) => onChange({ director })}
-            expand="end"
-            searchableAbove={0}
-            compact
-          />
+        </button>
+
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none",
+            filtersOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          )}
+        >
+          <div className="overflow-hidden">
+            <div
+              className={cn(
+                "grid grid-cols-2 gap-x-1.5 gap-y-1.5 rounded-md border border-ink/10 bg-paper/40 p-1.5 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none lg:gap-x-2 lg:gap-y-2.5 lg:p-2",
+                filtersOpen
+                  ? "translate-y-0 opacity-100"
+                  : "pointer-events-none -translate-y-1 opacity-0"
+              )}
+            >
+              <FilterSelect
+                field="Date"
+                label="全部日期"
+                value={values.date}
+                options={dateOptions}
+                onChange={(date) => onChange({ date })}
+                compact
+              />
+              <FilterSelect
+                field="Cinema"
+                label="全部影院"
+                value={values.cinemaId}
+                options={cinemaOptions}
+                onChange={(cinemaId) => onChange({ cinemaId })}
+                expand="end"
+                compact
+              />
+              <FilterSelect
+                field="Section"
+                label="全部单元"
+                value={values.section}
+                options={sectionOptions}
+                onChange={(section) => onChange({ section })}
+                compact
+              />
+              <FilterSelect
+                field="Director"
+                label="全部导演"
+                value={values.director}
+                options={directorOptions}
+                onChange={(director) => onChange({ director })}
+                expand="end"
+                searchableAbove={0}
+                compact
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>

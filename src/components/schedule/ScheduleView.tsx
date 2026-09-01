@@ -102,7 +102,7 @@ export function ScheduleView() {
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden text-ink lg:flex-row lg:gap-4 lg:px-4 lg:pb-4 lg:pt-4">
-      <aside className="flex max-h-[42%] shrink-0 flex-col gap-3 overflow-hidden px-5 pb-2 pt-5 lg:max-h-none lg:h-full lg:w-[min(100%,22rem)] lg:px-0 lg:pb-0 lg:pt-0">
+      <aside className="flex max-h-[28%] shrink-0 flex-col gap-1 overflow-hidden px-4 pb-1 pt-3 lg:max-h-none lg:h-full lg:w-[min(100%,22rem)] lg:gap-3 lg:px-0 lg:pb-0 lg:pt-0">
         <ScheduleHeader
           stats={stats}
           edition={festival.data.dataset.editionLabel}
@@ -116,15 +116,18 @@ export function ScheduleView() {
           onClone={(id) => clonePlan(id)}
           onRemove={(id) => removePlan(id)}
         />
-        <div className="cm-frost overflow-hidden rounded-xl border-2 border-ink/10">
-          <div className="h-1 w-full cm-hazard" aria-hidden />
-          <div className="flex gap-1.5 p-2.5">
+        <div className="overflow-hidden rounded-md border border-ink/10 lg:rounded-xl lg:border-2 lg:cm-frost">
+          <div className="hidden h-1 w-full cm-hazard lg:block" aria-hidden />
+          <div className="flex gap-0.5 p-1 lg:gap-1.5 lg:p-2.5">
             <Link
               href="/match"
-              className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-ink/12 bg-paper/60 px-2 py-2 font-mono text-[11px] font-bold tracking-wide text-ink/65 hover:border-accent/40 hover:text-accent"
+              aria-label="碰场"
+              className="inline-flex min-w-0 flex-1 items-center justify-center rounded-md border border-ink/12 bg-paper/60 px-1 py-1 text-ink/65 hover:border-accent/40 hover:text-accent lg:gap-1.5 lg:px-2 lg:py-2"
             >
               <Handshake className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">碰场</span>
+              <span className="hidden truncate font-mono text-[11px] font-bold tracking-wide lg:inline">
+                碰场
+              </span>
             </Link>
             <QuickAction
               icon={ImageIcon}
@@ -201,7 +204,7 @@ export function ScheduleView() {
         </div>
       </aside>
 
-      <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-5 pb-6 lg:rounded-xl lg:border lg:border-ink/12 lg:bg-panel-raised/30 lg:px-0 lg:pb-0">
+      <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-4 pb-4 lg:rounded-xl lg:border lg:border-ink/12 lg:bg-panel-raised/30 lg:px-0 lg:pb-0">
         <p className="hidden shrink-0 border-b border-ink/10 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink/40 lg:block">
           <span className="text-accent">{"//"}</span> 时间轴画布
           {focusId ? " · 已高亮左侧所选" : ""}
@@ -261,25 +264,29 @@ function ScheduleHeader({
   compact?: boolean;
 }) {
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex items-start gap-2 lg:gap-3">
       <div
         className={cn(
           "cm-frost flex shrink-0 items-center justify-center border-2 border-ink font-display font-black tracking-tight",
-          compact ? "h-12 w-12 text-xl" : "h-14 w-14 text-2xl"
+          compact
+            ? "h-10 w-10 text-lg lg:h-12 lg:w-12 lg:text-xl"
+            : "h-14 w-14 text-2xl"
         )}
       >
         03
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-mono text-[11px] font-bold tracking-[0.12em] text-ink/50">
-          <span className="text-accent">{"//"}</span> 排片 · Side B · {edition}
+        <p className="font-mono text-[10px] font-bold tracking-[0.1em] text-ink/50 lg:text-[11px] lg:tracking-[0.12em]">
+          <span className="text-accent">{"//"}</span>{" "}
+          <span className="lg:hidden">排片</span>
+          <span className="hidden lg:inline">排片 · Side B · {edition}</span>
         </p>
-        <h1 className="mt-1 font-display text-[1.55rem] font-black leading-[1.15] tracking-tight text-ink lg:text-[1.35rem]">
+        <h1 className="mt-0.5 font-display text-[1.35rem] font-black leading-[1.1] tracking-tight text-ink lg:mt-1 lg:text-[1.35rem] lg:leading-[1.15]">
           我的
-          <span className="bg-accent px-1.5 text-white">排片</span>
+          <span className="bg-accent px-1 text-white lg:px-1.5">排片</span>
         </h1>
         {stats && (
-          <p className="mt-2 inline-flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wide text-ink/45">
+          <p className="mt-1 inline-flex items-center gap-1 font-mono text-[10px] font-bold tracking-wide text-ink/45 lg:mt-2 lg:gap-1.5 lg:text-[11px]">
             <span className="cm-status-dot" />
             {stats.filmCount} 部 · ¥{stats.totalPrice} · {stats.tightnessLabel}
           </p>
@@ -301,11 +308,14 @@ function QuickAction({
   return (
     <button
       type="button"
+      aria-label={label}
       onClick={onClick}
-      className="inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-ink/12 bg-paper/60 px-2 py-2 font-mono text-[11px] font-bold tracking-wide text-ink/65 hover:border-accent/40 hover:text-accent"
+      className="inline-flex min-w-0 flex-1 items-center justify-center rounded-md border border-ink/12 bg-paper/60 px-1 py-1 text-ink/65 hover:border-accent/40 hover:text-accent lg:gap-1.5 lg:px-2 lg:py-2"
     >
       <Icon className="h-3.5 w-3.5 shrink-0" />
-      <span className="truncate">{label}</span>
+      <span className="hidden truncate font-mono text-[11px] font-bold tracking-wide lg:inline">
+        {label}
+      </span>
     </button>
   );
 }

@@ -24,14 +24,14 @@ export function PlanTabs({
   const canRemove = plans.length > 1;
 
   return (
-    <div className="-mx-5 flex items-end gap-1 overflow-x-auto border-b border-ink/10 px-5 scrollbar-none">
+    <div className="-mx-4 flex items-end gap-0.5 overflow-x-auto border-b border-ink/10 px-4 scrollbar-none lg:-mx-5 lg:gap-1 lg:px-5">
       {plans.map((plan) => {
         const active = plan.id === activePlanId;
         return (
           <div
             key={plan.id}
             className={cn(
-              "relative flex shrink-0 items-center gap-0.5 px-2.5 pb-2.5 pt-1",
+              "relative flex shrink-0 items-center gap-0.5 px-2 pb-1.5 pt-0.5 lg:px-2.5 lg:pb-2.5 lg:pt-1",
               active ? "font-bold text-ink" : "text-ink/40"
             )}
           >
@@ -40,14 +40,14 @@ export function PlanTabs({
               onClick={() => onSelect(plan.id)}
               onDoubleClick={() => onClone?.(plan.id)}
               className={cn(
-                "inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wide transition-colors",
+                "inline-flex items-center gap-0.5 font-mono text-[11px] uppercase tracking-wide transition-colors lg:gap-1 lg:text-xs",
                 active ? "text-ink" : "hover:text-ink/70"
               )}
             >
               {(plan.starred || active) && (
                 <Star
                   className={cn(
-                    "h-3 w-3",
+                    "h-2.5 w-2.5 lg:h-3 lg:w-3",
                     active ? "fill-accent text-accent" : "text-ink/30"
                   )}
                 />
@@ -74,7 +74,7 @@ export function PlanTabs({
               </button>
             )}
             {active && (
-              <span className="absolute inset-x-2.5 bottom-0 h-0.5 bg-accent" />
+              <span className="absolute inset-x-2 bottom-0 h-0.5 bg-accent lg:inset-x-2.5" />
             )}
           </div>
         );
@@ -82,9 +82,9 @@ export function PlanTabs({
       <button
         type="button"
         onClick={onAdd}
-        className="mb-1.5 inline-flex shrink-0 items-center gap-0.5 rounded-full border border-ink/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-ink/45 hover:border-accent/40 hover:text-accent"
+        className="mb-1 inline-flex shrink-0 items-center gap-0.5 rounded-full border border-ink/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-ink/45 hover:border-accent/40 hover:text-accent lg:mb-1.5 lg:px-2.5 lg:py-1 lg:text-[10px]"
       >
-        <Plus className="h-3.5 w-3.5" />
+        <Plus className="h-3 w-3 lg:h-3.5 lg:w-3.5" />
         New
       </button>
     </div>

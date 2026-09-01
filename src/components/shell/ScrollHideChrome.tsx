@@ -9,33 +9,35 @@ type Props = {
   className?: string;
 };
 
+const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
+
 /**
- * Whole filter module fades opacity together.
- * Height does not tween — it only collapses after the fade (delay),
- * and expands instantly when shown again.
+ * Filter chrome slides/fades as one block when the list scrolls.
+ * Uses grid row animation for smooth height — no abrupt max-height snap.
  */
 export function ScrollHideChrome({ hidden, children, className }: Props) {
   return (
     <div
       className={cn(
-        "shrink-0 overflow-hidden",
-        // Collapse only after fade finishes; expand with no delay
-        hidden
-          ? "max-h-0 transition-[max-height] duration-0 delay-300 motion-reduce:delay-0"
-          : "max-h-[40rem] transition-[max-height] duration-0 delay-0",
-        "lg:!max-h-none lg:!overflow-visible lg:delay-0",
+        "grid shrink-0 transition-[grid-template-rows] duration-300 motion-reduce:transition-none lg:!grid-rows-[1fr]",
+        hidden ? "grid-rows-[0fr]" : "grid-rows-[1fr]",
         className
       )}
+      style={{ transitionTimingFunction: EASE }}
       aria-hidden={hidden || undefined}
     >
-      <div
-        className={cn(
-          "transition-opacity duration-300 ease-out motion-reduce:transition-none",
-          "lg:!opacity-100 lg:!pointer-events-auto",
-          hidden ? "pointer-events-none opacity-0" : "opacity-100"
-        )}
-      >
-        {children}
+      <div className="overflow-hidden lg:overflow-visible">
+        <div
+          className={cn(
+            "origin-top transition-[opacity,transform] duration-300 motion-reduce:transition-none motion-reduce:transform-none lg:!translate-y-0 lg:!opacity-100 lg:!pointer-events-auto",
+            hidden
+              ? "pointer-events-none -translate-y-1 opacity-0"
+              : "translate-y-0 opacity-100"
+          )}
+          style={{ transitionTimingFunction: EASE }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

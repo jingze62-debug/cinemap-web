@@ -29,6 +29,11 @@ type DragScrollOptions = {
   target?: "window" | "self";
   /** Stop pointerdown bubbling (useful for nested chip rows). Default: true when target is `self`. */
   stopPropagation?: boolean;
+  /**
+   * Also pan with touch pointers (needed when native overflow scroll is unreliable,
+   * e.g. nested modals). Default false — keep native touch scroll elsewhere.
+   */
+  includeTouch?: boolean;
 };
 
 function getWindowScroll(): { x: number; y: number } {
@@ -39,9 +44,9 @@ function getWindowScroll(): { x: number; y: number } {
 }
 
 /**
- * Mouse drag-to-pan.
+ * Drag-to-pan.
+ * Mouse: always. Touch: only when `includeTouch` (otherwise native scroll).
  * Clicks stay intact: pan only starts after a small move threshold.
- * Touch keeps native scrolling; wheel is unchanged.
  */
 export function useDragScroll(
   axis: "y" | "x" | "both" = "y",
@@ -54,6 +59,7 @@ export function useDragScroll(
   const targetMode = options.target ?? "window";
   const stopPropagation =
     options.stopPropagation ?? targetMode === "self";
+  const includeTouch = options.includeTouch ?? false;
 
   const [node, setNode] = useState<HTMLDivElement | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -99,7 +105,12 @@ export function useDragScroll(
     };
 
     const onPointerDown = (e: PointerEvent) => {
-      if (e.pointerType === "touch") return;
+      if (e.pointerType === "touch" && !includeTouch) return;
+      // Multi-touch (pinch) — leave to other handlers
+      if (e.pointerType === "touch" && (e as PointerEvent & { isPrimary?: boolean }).isPrimary === false) {
+        reset();
+        return;
+      }
       if (e.pointerType === "mouse" && e.button !== 0) return;
       const target = e.target as HTMLElement | null;
       // Never arm over text fields / links — keep caret & navigation
@@ -186,7 +197,7 @@ export function useDragScroll(
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
     };
-  }, [node, axis, targetMode, stopPropagation]);
+  }, [node, axis, targetMode, stopPropagation, includeTouch]);
 
   const suppressClickIfDragged = (e: ReactMouseEvent) => {
     if (dragRef.current.moved) {

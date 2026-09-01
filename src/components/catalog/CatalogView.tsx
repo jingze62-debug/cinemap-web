@@ -328,15 +328,6 @@ export function CatalogView() {
         <ScrollHideChrome hidden={filtersHidden} className="px-3 lg:px-0">
           {searchPanel}
         </ScrollHideChrome>
-        {filtersHidden && (
-          <button
-            type="button"
-            onClick={showFilters}
-            className="mx-3 mb-1 shrink-0 rounded-md border border-ink/10 bg-panel-raised/70 px-2.5 py-1 font-mono text-[10px] font-bold text-ink/45 transition hover:border-accent/35 hover:text-accent lg:hidden"
-          >
-            <span className="text-accent">{"//"}</span> 筛选 · 展开
-          </button>
-        )}
         <div
           onScroll={onListScrollHide}
           className="cm-scroll-auto mt-2 min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain px-5 pb-6 [-webkit-overflow-scrolling:touch] lg:mt-3 lg:px-0 lg:pb-0"
