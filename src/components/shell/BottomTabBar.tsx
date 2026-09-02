@@ -98,7 +98,7 @@ export function BottomTabBar({
                 )}
                 aria-hidden
               />
-              <span className="max-w-full truncate px-0.5 font-mono text-[10px] font-bold leading-none tracking-wide">
+              <span className="max-w-full overflow-visible px-0.5 font-mono text-[10px] font-bold leading-[1.35] tracking-wide">
                 {label}
               </span>
               {isActive && (
