@@ -4,6 +4,7 @@ import { Check, ChevronDown, Heart, Plus } from "lucide-react";
 import type { Cinema } from "@/types/cinema";
 import type { Film, Screening } from "@/types/film";
 import { cn } from "@/lib/utils";
+import { formatTicketPrice } from "@/utils/price";
 import { Button } from "@/components/ui/button";
 import {
   formatScore,
@@ -215,6 +216,7 @@ export function FilmCard({
           </div>
           {film.screenings.map((s) => {
             const cinema = cinemasById.get(s.cinemaId);
+            const priceLabel = formatTicketPrice(s.price);
             const added = isScreeningAdded(s.id);
             const conflict = conflictHintId === s.id;
             return (
@@ -241,9 +243,9 @@ export function FilmCard({
                       {s.hall ? ` · ${s.hall}` : ""}
                     </p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                      {s.price > 0 ? (
+                      {priceLabel ? (
                         <span className="font-mono text-[13px] font-black text-accent">
-                          ¥{s.price}
+                          {priceLabel}
                         </span>
                       ) : (
                         <span className="font-mono text-[11px] font-bold text-ink/40">

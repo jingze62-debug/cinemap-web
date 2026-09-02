@@ -12,7 +12,7 @@ import { AppErrorBoundary } from "@/components/shell/AppErrorBoundary";
 import type { FestivalEntry } from "@/types/festival";
 import { track } from "@/lib/analytics";
 import { ensureFestivalData } from "@/hooks/useFestivalData";
-import { filmsPathForFestival } from "@/utils/dataLoader";
+import { filmsPathForFestival, loadFestivals } from "@/utils/dataLoader";
 import { cn } from "@/lib/utils";
 
 const loadingPane = (
@@ -47,26 +47,42 @@ export function AppShell() {
     track("app_open");
   }, []);
 
-  // Restore last festival after mount — never block first paint
+  // Restore last festival — re-resolve filmsPath from catalog (avoids stale cache paths).
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as FestivalEntry;
-      if (parsed?.id && parsed.available) {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const raw = sessionStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw) as FestivalEntry;
+        if (!parsed?.id || !parsed.available) return;
+
+        let entry: FestivalEntry = parsed;
+        try {
+          const { festivals } = await loadFestivals();
+          const latest = festivals.find((f) => f.id === parsed.id);
+          if (latest) entry = latest;
+        } catch {
+          /* fall back to stored entry */
+        }
+
+        if (cancelled) return;
         ensureFestivalData(
-          parsed.id,
-          filmsPathForFestival(parsed.id, parsed.filmsPath)
+          entry.id,
+          filmsPathForFestival(entry.id, entry.filmsPath)
         );
-        setFestival(parsed);
+        setFestival(entry);
         track("festival_enter", {
-          festivalId: parsed.id,
+          festivalId: entry.id,
           source: "session_restore",
         });
+      } catch {
+        /* ignore corrupt storage */
       }
-    } catch {
-      /* ignore corrupt storage */
-    }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const enterFestival = (f: FestivalEntry) => {

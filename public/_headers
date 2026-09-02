@@ -5,4 +5,4 @@
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 /data/*
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=60, must-revalidate

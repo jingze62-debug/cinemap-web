@@ -23,8 +23,8 @@ export type TravelModesDataset = {
 };
 
 async function fetchJson<T>(url: string): Promise<T> {
-  // Allow HTTP cache — critical on mobile (800KB+ films JSON).
-  const res = await fetch(url, { cache: "force-cache" });
+  // Respect CDN Cache-Control (see public/_headers); avoid stale force-cache.
+  const res = await fetch(url, { cache: "default" });
   if (!res.ok) {
     throw new Error(`Failed to load ${url}: ${res.status}`);
   }

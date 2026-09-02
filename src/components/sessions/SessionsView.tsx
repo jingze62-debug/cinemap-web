@@ -18,6 +18,7 @@ import { FilterSelect } from "@/components/ui/FilterSelect";
 import { ScrollHideChrome } from "@/components/shell/ScrollHideChrome";
 import { useScrollHideChrome } from "@/hooks/useScrollHideChrome";
 import { cn } from "@/lib/utils";
+import { formatTicketPrice } from "@/utils/price";
 
 const WEEKDAYS = ["日", "一", "二", "三", "四", "五", "六"];
 const ROWS_PER_DAY = 16;
@@ -151,6 +152,7 @@ const SessionRow = memo(function SessionRow({
   const scores = resolveFilmScores(film);
   const techTag = screening.techTags?.[0];
   const countries = film.countries?.join("/") ?? "—";
+  const priceLabel = formatTicketPrice(screening.price);
 
   return (
     <article
@@ -216,9 +218,9 @@ const SessionRow = memo(function SessionRow({
         </p>
 
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          {screening.price > 0 ? (
+          {priceLabel ? (
             <span className="font-mono text-[13px] font-black text-accent">
-              ¥{screening.price}
+              {priceLabel}
             </span>
           ) : (
             <span className="font-mono text-[11px] font-bold text-ink/40">
